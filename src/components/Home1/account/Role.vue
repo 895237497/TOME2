@@ -45,6 +45,7 @@
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
           <select
             v-model="addForm.type"
+            ref="getRoleName"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
           >
             <option value="0">超级管理员</option>
@@ -108,13 +109,14 @@
         </el-form-item>
 
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
-          <select
+          <input type="text" v-model="roleName">
+          <!-- <select
             v-model="editForm.type"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
           >
             <option value="0">超级管理员</option>
             <option value="1">景区管理员</option>
-          </select>
+          </select> -->
         </el-form-item>
         <el-form-item
           v-model="menuList"          
@@ -139,7 +141,7 @@
               <el-checkbox
                 v-for="(subItem,index) in item.permissionList"
                 :label="subItem.id"
-               
+                :key="subItem.id"
               >{{subItem.name}}</el-checkbox>
             </span>
           </el-checkbox-group>
@@ -180,6 +182,7 @@ export default {
       }
     };
     return {
+      roleName:'',
       isChecked:true,
       showresetButton: true,
       powerOff:true,
@@ -400,6 +403,8 @@ export default {
       var _this = this;
       var api = this.saveapi;
       common.commonUploadByPost(path + api, sform, token, function() {
+        let RoleName = _this.$refs.getRoleName[_this.addForm.type].text
+        _this.roleName = _this.$refs.getRoleName[_this.addForm.type].text
         _this.refreshTable();
       });
     },

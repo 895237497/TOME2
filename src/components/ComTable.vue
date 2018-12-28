@@ -27,7 +27,7 @@
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
       <el-button round @click="addData" size="small" v-if="showAdd">新增</el-button>
-      <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
+      <el-button round @click="addData2" size="small" v-if="showAdd2">新增2</el-button>
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
       <el-button round @click="exportData" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
@@ -93,7 +93,7 @@
               v-if="!showButtonEdit"
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >1编辑</el-button>
             <el-button size="mini"  @click="openDelete(scope.$index, scope.row)">删除</el-button>
 
             <el-button size="mini" v-if="!showresetButton" type="warning" @click="resetpwd(scope.$index, scope.row)">重置密码</el-button>
