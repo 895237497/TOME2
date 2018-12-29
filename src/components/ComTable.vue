@@ -138,17 +138,17 @@
         :rules="Rules"
         style="width:100%;border-top: 2px solid #FCD4B0;"
       >
-        <el-form-item label="新密码" style="margin-top:30px">
-          <el-input v-model="Form.oldPassword" autocomplete="off" style="width:300px;margin:0 auto;" placeholder="请输入您的新密码"></el-input>
+        <el-form-item label="新密码" style="margin-top:30px" prop='oldPassword'>
+          <el-input v-model="Form.oldPassword" autocomplete="off"  style="width:300px;margin:0 auto;" placeholder="请输入您的新密码"></el-input>
         </el-form-item>
-        <el-form-item label="再次确认" style="margin-top:30px">
+        <el-form-item label="再次确认" style="margin-top:30px" prop='newPassword'>
           <el-input v-model="Form.newPassword" autocomplete="off" style="width:300px;margin:0 auto;" placeholder="请再次输入您的新密码"></el-input>
         </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="resetVisible = false" size="small">清空</el-button>
-        <el-button type="primary" style="background: #FA841A;" size="small" @click="showResetVisible">保存</el-button>
+        <el-button type="primary" style="background: #FA841A;" size="small" @click="save">保存</el-button>
       </span>
     </el-dialog>
 
@@ -184,6 +184,20 @@ export default {
     AddForm
   },
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value == undefined || value === "") {
+        callback(new Error("密码不能为空"));
+      } else {
+        if (this.Form !== "") {
+          var num = Number(value);
+          if (typeof num === "number" && num % 1 === 0 && num > 0) {
+            callback();
+          } else {
+            callback(new Error("密码不正确"));
+          }
+        }
+      }
+    };
     return {
       addtitle: "表格添加",
       addFormVisible: false,
@@ -202,15 +216,17 @@ export default {
       Form:{
         oldPassword:'',
         newPassword:'',
+        id:''
       },
      Rules: {
         oldPassword: [
-          { required: true, message: "请输入机器码", trigger: "blur" }
+          { required: true, message: "请输入密码", trigger: "blur" }
         ],
         newPassword: [
-          { required: true, message: "请输入电话号码", trigger: "blur" }
+          { required: true, message: "请再次输入密码", trigger: "blur" }
         ],
       },
+      row:''
     };
   },
   props: [
@@ -247,6 +263,36 @@ export default {
     "showcleartravel"
   ],
   methods: {
+    // 重置密码
+    save(row){
+      var api = '/user/resetPassword'
+      var _this = this
+      var token = localStorage.getItem('token')
+      this.$axios.post(path + api,{
+        id:_this.Form.id,
+        oldPassword:_this.Form.oldPassword,
+        newPassword:_this.Form.newPassword
+      },{
+        headers:{Authorization:"Bearer" + token}
+      }).then(response=>{
+        if(response.data.resultStatus.resultCode === "0000"){
+          this.$message({
+            message:"密码修改成功",
+            type:'success',
+            duration: 1200
+          })
+          
+        }else{
+          this.$message({
+            message:"密码修改失败",
+             type:'error',
+            duration:900
+          })
+          refreshTable(Form)
+        }
+        
+      })
+    },
     //添加数据
     addData() {
       this.addFormVisible = true;
@@ -295,18 +341,18 @@ export default {
       this.delVisible = true;
     },
     // 重置密码
-    showResetVisible() {
-      var multipleSelection = this.multipleSelection;
-      if (multipleSelection == undefined || multipleSelection.length == 0) {
-        this.$message({
-          message: "未选中数据",
-          type: "error",
-          duration: 1200
-        });
-        return;
-      }
-      this.resetVisible = true;
-    },
+    // showResetVisible() {
+    //   var multipleSelection = this.multipleSelection;
+    //   if (multipleSelection == undefined || multipleSelection.length == 0) {
+    //     this.$message({
+    //       message: "未选中数据",
+    //       type: "error",
+    //       duration: 1200
+    //     });
+    //     return;
+    //   }
+    //   this.resetVisible = true;
+    // },
     deleteByIds() {
       var multipleSelection = this.multipleSelection;
       var delIds = [];
@@ -373,9 +419,11 @@ export default {
       this.delVisible = true;
     },
     resetpwd(index,row){
-     var arr = new Array();
-     arr.push(row);
-     this.multipleSelection = arr;
+     console.log(index, row);
+      var _this = this
+      _this.Form.id = row.id
+      console.log(" _this.form.id", _this.Form.id);
+      
      this.resetVisible = true;
     },
     // 分页

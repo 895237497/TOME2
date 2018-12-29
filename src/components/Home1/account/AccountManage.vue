@@ -187,7 +187,7 @@ export default {
         contenttitl: {
         name: "账号分配",
         description: "账号管理",
-        tabledesctiption: "共有位置版发射源",
+        tabledesctiption: "共有账号",
         unit: "个"
       },
       queryapi: "/user/selectUserByPage",
@@ -443,6 +443,9 @@ export default {
     };
   },
   methods: {
+     
+    
+
     //修改
     update() {
       var _this = this;

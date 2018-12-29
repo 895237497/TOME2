@@ -430,9 +430,7 @@ export default {
         codeMachine: [
           { required: true, message: "请输入机器码", trigger: "blur" }
         ],
-        // radius: [
-        //   { validator: validatePass,required: true, trigger: 'blur' }
-        // ],
+       
         telephone: [
           { required: true, message: "请输入电话号码", trigger: "blur" }
         ],

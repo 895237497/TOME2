@@ -49,14 +49,6 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.mold">
       <span style="margin-right: 18px;">线路类型</span>
-      <!-- <el-select  size="small" v-model="sform.type" placeholder="请输入线路类型">
-				    <el-option st
-				      v-for="item in scenerylistquery"
-				      :key="item.id"
-				      :label="item.name"
-				      :value="item.sceneryId">
-				    </el-option>
-      </el-select>-->
       <select
         v-model="sform.type"
         aria-placeholder="请选择线路类型···"
@@ -70,14 +62,7 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.isAllot">
       <span style="margin-right: 18px;">分配状态</span>
-      <!-- <el-select  size="small" v-model="sform.isAllot" placeholder="请选择景区·····">
-				    <el-option st
-				      v-for="item in isAllot"
-				      :key="item.id"
-				      :label="item.name"
-				      :value="item.sceneryId">
-				    </el-option>
-      </el-select>-->
+      
       <select
         v-model="sform.isAllot"
         style="width:140px;height:30px;border:1px solid #e5e5e5;border-radius:6px;outline:none"
@@ -163,14 +148,6 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.sex">
       <span style="margin-right: 18px;">性别</span>
-      <!-- <el-select  size="small" v-model="sform.isAllot" placeholder="请选择景区·····">
-				    <el-option st
-				      v-for="item in isAllot"
-				      :key="item.id"
-				      :label="item.name"
-				      :value="item.sceneryId">
-				    </el-option>
-      </el-select>-->
       <select
         v-model="sform.sex"
         style="width:140px;height:30px;border:1px solid #e5e5e5;border-radius:6px;outline:none"
@@ -237,14 +214,6 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.scenery">
       <span style="margin-right: 18px;">景区</span>
-      <!-- <el-select  size="small" v-model="sform.scenery" placeholder="请选择景区·····">
-				    <el-option st
-				      v-for="item in scenerylistquery"
-				      :key="item.id"
-				      :label="item.name"
-				      :value="item.id">
-				    </el-option>
-      </el-select>-->
       <el-select v-model="sform.scenery" size="small" filterable placeholder="请选择景区·····">
         <el-option
           v-for="item in scenerylistquery"
@@ -318,7 +287,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import common from "../common/common.js";
 import { path } from "../../api/api.js";
 export default {
@@ -383,6 +352,7 @@ export default {
       //将searchForm传递给父组件
       this.$emit("search", formdata);
     },
+    
     resetForm() {
       var ssform = this.sform;
       var resetfrom = {};

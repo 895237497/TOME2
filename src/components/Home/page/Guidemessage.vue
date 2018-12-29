@@ -462,8 +462,8 @@ export default {
       }
 
       //获取表格数据
-      sform.type = this.fridtype;
-      sform.sceneryIds = sceneryIds;
+      // sform.type = this.fridtype;
+      // sform.sceneryIds = sceneryIds;
 
       this.$refs["tumitable"].getTableData(sform);
     }
