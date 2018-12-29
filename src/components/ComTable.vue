@@ -256,8 +256,24 @@ export default {
     
     // 操作按钮
     handleEdit(index, row) {
-      console.log(index, row);
-      this.$emit("editData", row);
+      var api = "/user/selectMenuByType";
+      var value = row.menuList[0].type
+      var _this = this;
+      var token = localStorage.getItem("token");
+      this.$axios
+        .get(path + api + "?type=" + value, {
+          headers: {
+            Authorization: "Bearer" + token
+          }
+        })
+        .then(response => {
+          let list = {};
+          list = JSON.parse(JSON.stringify(response.data.value));
+           this.$emit("editData",row,list);
+          console.log(_this.menuList, "获取到的菜单········");
+        });
+      console.log("index",index, "row",row);
+     
     },
     showDelVisible() {
       var multipleSelection = this.multipleSelection;
@@ -378,7 +394,6 @@ export default {
         .then(function(response) {
           let ret = response;
           console.log(ret,"这是我要的数据----");
-          
           if (ret.status == "200") {
             vm.tableData = ret.data.value.list;
             console.log(vm.tableData);

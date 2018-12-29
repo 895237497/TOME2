@@ -45,7 +45,7 @@
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
           <select
             v-model="addForm.type"
-            ref="getRoleName"
+            ref="getroleName"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
           >
             <option value="0">超级管理员</option>
@@ -109,7 +109,7 @@
         </el-form-item>
 
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
-          <input type="text" v-model="roleName">
+          <input type="text" :value="editForm.type===0 ? '超级管理员' : '景区管理员'">
           <!-- <select
             v-model="editForm.type"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
@@ -124,19 +124,18 @@
           label="选择权限"
           prop="menuIds"
         >
-          <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId" @change="handleCheckedCitiesChange">
+          <el-checkbox-group v-model="menuList">
             <!-- 一级菜单 -->
-            <p>
-              <el-checkbox :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+            <p v-for="item in allMenuList">
+              <el-checkbox style="color:red" :label="item.id">{{item.name}}</el-checkbox>
             </p>
             <!-- 二级菜单 -->
-            <span style="margin-left:5px;text-align:left">
-              <el-checkbox v-for="(item1,index) in item.child" :label="item1.id">{{item1.name}}</el-checkbox>
-            </span>
+            <!-- <span style="margin-left:5px;text-align:left">
+              <el-checkbox >二级</el-checkbox>
+            </span> -->
           </el-checkbox-group>
 
-          <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
-            <!-- 循环子类 -->
+          <!-- <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
             <span style="margin-left:16px">
               <el-checkbox
                 v-for="(subItem,index) in item.permissionList"
@@ -144,7 +143,7 @@
                 :key="subItem.id"
               >{{subItem.name}}</el-checkbox>
             </span>
-          </el-checkbox-group>
+          </el-checkbox-group> -->
         </el-form-item>
       </el-form>
 
@@ -182,11 +181,11 @@ export default {
       }
     };
     return {
-      roleName:'',
       isChecked:true,
       showresetButton: true,
       powerOff:true,
       menuList: [],
+      allMenuList: [],
       contenttitl: {
         name: "账号管理",
         description: "角色分配",
@@ -204,7 +203,7 @@ export default {
         code: "",
         menuIds: [],
         name: "",
-        permissionIds: []
+        permissionIds: [],
       },
       editForm: {
         id: "",
@@ -216,9 +215,6 @@ export default {
         menuIds: []
       },
       showAdd: false,
-      // numberValidateForm: {
-      //   age: ""
-      // },
       addVisible: false,
       showQueryDate: true,
       showImg: true,
@@ -285,24 +281,6 @@ export default {
             }
           ]
         },
-
-        // {
-        //   hasSubs: false,
-        //   subs: [
-        //     {
-        //       label: "景区id",
-        //       prop: "sceneryId",
-        //       width: "200",
-        //       type: "number",
-        //       editable: true,
-        //       hidden:true,
-        //       searchable: true,
-        //       addable: true,
-        //       unsortable: true,
-        //       align: "center"
-        //     }
-        //   ]
-        // },
         {
           hasSubs: false,
           subs: [
@@ -350,6 +328,7 @@ export default {
   methods: {
     //修改
     update() {
+      
       var _this = this;
       var sform = this.editForm;
       var token = localStorage.getItem("token");
@@ -368,16 +347,32 @@ export default {
       },
     
     //编辑
-    editData(row) {
+    editData(row,list) {
+      console.log("hhhhhhhhhhh",this.$refs["tumitable"])
+      
       this.row = row;
       var _this = this;
       var roleId = _this.row.id;
       // console.log(roleId,"获取到当前的Id");
        
       var type = _this.row.menuList[0].type;
-      var menuLists= _this.row.menuList;
-      
+      var menuL= _this.row.menuList;
+      var menuLists = []
+      var allMenuList = []
+      menuL.forEach(item => {
+        menuLists.push(item.id)
+      })
+      list.forEach(item => {
+        allMenuList.push({id:item.id,name:item.name})
+        if(item.child){
+          item.child.forEach(childItem => {
+            allMenuList.push(childItem.id)
+          })
+        }
+      })
+      _this.allMenuList = allMenuList
       _this.menuList = menuLists
+      console.log("xxx",menuLists,allMenuList)
       //根据当前景区id获取景点信息
       
       //清空editForm
@@ -394,17 +389,20 @@ export default {
     },
     //刷新表格
     refreshTable() {
+      
       this.$refs["tumitable"].refreshTable();
       this.addVisible = false;
     },
     save() {
+      console.log("ggg",this.addForm)
+      console.log(this.$refs)
       var sform = this.addForm;
       var token = localStorage.getItem("token");
       var _this = this;
       var api = this.saveapi;
       common.commonUploadByPost(path + api, sform, token, function() {
-        let RoleName = _this.$refs.getRoleName[_this.addForm.type].text
-        _this.roleName = _this.$refs.getRoleName[_this.addForm.type].text
+        
+        // console.log(_this.$refs["tumitable"])
         _this.refreshTable();
       });
     },
@@ -450,6 +448,7 @@ export default {
           }
         )
         .then(function(response) {
+          console.log(response)
           let data = response.data.value;
 
           let scenerylist = data.slice();
@@ -493,43 +492,6 @@ export default {
     //查询景区服务商并并获取表格数据
     this.getSceneryList();
   },
-  // watch:{
-  // 	"addForm.sceneryId": function sceneryId(){
-  // 			//通过检测景区id的修改查询景点id
-  // 			var api = "/scenery/webdata/getsceneryspotbysceneryid";
-  // 			let token = localStorage.getItem("token");
-  // 			let sform = {
-  // 				sceneryId:this.addForm.sceneryId
-  // 			}
-  // 			var vm = this;
-  // 			this.addForm.scenerySpotId='';
-
-  // 		    	 common.commonPost(path+api,sform,token,function(data){
-  // 		    	 	vm.sceneryspotlist=data.value
-  // 		    	 });
-  // 		 },
-  // 		 "editForm.sceneryId": function sceneryId(value){
-  // 		 	//alert(value != )
-
-  // 		 	if(this.row.sceneryId == value){
-  // 		 		this.editForm.scenerySpotId = this.row.scenerySpotId;
-  // 		 	}else{
-  // 		 		this.editForm.scenerySpotId=''
-  // 		 	}
-  // 			//通过检测景区id的修改查询景点id
-  // 			var api = "/scenery/webdata/getsceneryspotbysceneryid";
-  // 			let token = localStorage.getItem("token");
-  // 			let sform = {
-  // 				sceneryId:this.editForm.sceneryId
-  // 			}
-  // 			var vm = this;
-  // 			this.addForm.scenerySpotId='';
-
-  //     	 common.commonPost(path+api,sform,token,function(data){
-  //     	 		vm.sceneryspoteditlist=data.value
-  //     	 });
-  // 		 }
-  // },
   watch: {
     "addForm.type": function getmune(value) {
       var api = "/user/selectMenuByType";
