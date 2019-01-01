@@ -126,13 +126,14 @@
         >
           <el-checkbox-group v-model="menuList">
             <!-- 一级菜单 -->
-            <p v-for="item in allMenuList">
+            <div v-for="item in allMenuList">
               <el-checkbox style="color:red" :label="item.id">{{item.name}}</el-checkbox>
-            </p>
+              <p style="margin-left:5px;text-align:left" v-for="child in item.child">
+                <el-checkbox style="color:red" :label="child.id">{{child.name}}</el-checkbox>
+              </p>
+            </div>
             <!-- 二级菜单 -->
-            <!-- <span style="margin-left:5px;text-align:left">
-              <el-checkbox >二级</el-checkbox>
-            </span> -->
+            
           </el-checkbox-group>
 
           <!-- <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
@@ -358,21 +359,26 @@ export default {
       var type = _this.row.menuList[0].type;
       var menuL= _this.row.menuList;
       var menuLists = []
-      var allMenuList = []
+      var allMenuList = list
       menuL.forEach(item => {
         menuLists.push(item.id)
-      })
-      list.forEach(item => {
-        allMenuList.push({id:item.id,name:item.name})
         if(item.child){
           item.child.forEach(childItem => {
-            allMenuList.push(childItem.id)
+            menuLists.push(childItem.id)
           })
         }
       })
+      // list.forEach(item => {
+      //   allMenuList.push({id:item.id,name:item.name})
+      //   if(item.child){
+      //     item.child.forEach(childItem => {
+      //       allMenuList.push({id:childItem.id,name:childItem.name})
+      //     })
+      //   }
+      // })
       _this.allMenuList = allMenuList
       _this.menuList = menuLists
-      console.log("xxx",menuLists,allMenuList)
+      console.log("xxx",menuLists,allMenuList,list)
       //根据当前景区id获取景点信息
       
       //清空editForm
