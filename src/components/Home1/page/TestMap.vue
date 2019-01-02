@@ -34,8 +34,31 @@
     </div>
     <!-- 当天人流量 -->
     <div id="flux">
-      <span>当天人流量</span>
-      <p></p>
+      <span>实时客流量</span>
+      <div><p v-for="item in personCount">
+       {{item.value[1]}}
+      </p></div>
+      <div id="main2"></div>
+    </div>
+    <!-- 图标 -->
+    <div class="os">
+      <ul>
+        <li>
+          <img src="../../../assets/images/relitu.png">
+        </li>
+        <li>
+          <img src="../../../assets/images/dingwei.png">
+        </li>
+        <li>
+          <img src="../../../assets/images/quanju.png">
+        </li>
+        <li>
+          <img src="../../../assets/images/fangda.png">
+        </li>
+        <li>
+          <img src="../../../assets/images/suoxiao.png">
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -43,10 +66,13 @@
 import { MP } from "./map.js";
 import BMap from "BMap";
 import { path } from "../../../api/api.js";
+var eCharts = require("echarts");
+
 export default {
   data() {
     return {
-      sum: ""
+      sum: "",
+      personCount:''
     };
   },
   methods: {
@@ -156,6 +182,110 @@ export default {
         }
       };
     },
+    // 统计图表
+    lineCharts() {
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = this.$echarts.init(document.getElementById("main2"));
+      // 指定图表的配置项和数据
+      function randomData() {
+        now = new Date(+now + oneDay);
+        value = value + Math.random() * 21 - 10;
+        return {
+          name: now.toString(),
+          value: [
+            [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/"),
+            Math.round(value)
+          ]
+        };
+      }
+
+      var data = [];
+      var now = +new Date(1970, 1, 1);
+      var oneDay = 24 * 3600 * 1000;
+      var value = Math.random() * 10000;
+      for (var i = 0; i < 1000; i++) {
+        data.push(randomData());
+      }
+
+    let  option = {
+        // title: {
+        //   text: "动态数据 + 时间坐标轴"
+        // },
+        // tooltip: {
+        //   trigger: "axis",
+        //   formatter: function(params) {
+        //     params = params[0];
+        //     var date = new Date(params.name);
+        //     // return (
+        //     //   date.getDate() +
+        //     //   "/" +
+        //     //   (date.getMonth() + 1) +
+        //     //   "/" +
+        //     //   date.getFullYear() +
+        //     //   " : " +
+        //     //   params.value[1]
+        //     // );
+        //   },
+        //   axisPointer: {
+        //     animation: false
+        //   }
+        // },
+        xAxis: {
+          type: "time",
+          spliNumber:2,
+          scale:true,
+          show:false,
+          splitLine: {
+            show: false
+          }
+        },
+        yAxis: {
+          type: "value",
+          spliNumber:2,
+          scale:true,
+          show:false,
+          boundaryGap: [0, "100%"],
+          splitLine: {
+            show: false
+          }
+        },
+        series: [
+          {
+            name: "模拟数据",
+            type: "line",
+            showSymbol: false,
+            hoverAnimation: false,
+            smooth: true,
+            data: data
+          }
+        ]
+      };
+
+      setInterval(function() {
+        for (var i = 0; i < 5; i++) {
+          data.shift();
+          data.push(randomData());
+        }
+
+        myChart.setOption({
+          series: [
+            {
+              data: data              
+            }
+          ]          
+        });
+      }, 600);
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+      console.log("data",data);
+      console.log('------------')
+        console.log(this.personCount)
+       console.log('------------')
+      //  this.personCount = JSON.parse(JSON.stringify(data))
+       this.personCount = data
+    },
+
     // 查询设备总数及在线数量
     finddevicecount() {
       var api = "/device/terminal/selectTerminalCount";
@@ -181,7 +311,10 @@ export default {
     this.map();
 
     this.finddevicecount();
-  }
+
+    this.lineCharts();
+    console.log("sdfsd",this.personCount[0].value[1])
+  },
 };
 </script>
 
@@ -203,7 +336,7 @@ export default {
     height: 150px;
     // border: solid 1px #ccc;
     position: absolute;
-    top: 40px;
+    top: 10px;
     right: 20px;
     display: flex;
     .sum {
@@ -234,7 +367,7 @@ export default {
     height: 300px;
     // border: solid 1px #ccc;
     position: absolute;
-    top: 220px;
+    top: 180px;
     right: 20px;
     span {
       display: inline-block;
@@ -246,11 +379,38 @@ export default {
       color: #fff;
       text-align: center;
     }
-    p {
+    div{
+      height: 60px;
+      overflow: hidden;
+      p {
       background: #fbfbfbc7;
-      height: 270px;
-      font-size: 30px;
-      // line-height: 120px;
+      // height: 270px;
+      font-size: 40px;
+      text-align: center;
+      line-height: 60px;
+      color: #8c8c8c;
+    }
+    }
+    #main2 {
+      width: 100%;
+      height: 72%;
+      background: #fbfbfbc7;
+    }
+  }
+  .os {
+    width: 80px;
+    position: absolute;
+    top: 480px;
+    right: 10px;
+    ul {
+      li {
+        margin: 10px auto;
+        cursor: pointer;
+        img {
+          width: 64px;
+          background: #fbfbfbc7;
+        }
+      }
     }
   }
 }
