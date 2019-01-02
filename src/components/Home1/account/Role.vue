@@ -124,16 +124,15 @@
           label="选择权限"
           prop="menuIds"
         >
-          <el-checkbox-group v-model="menuList">
+          <el-checkbox-group v-model="menuList"  @change="test($event)">
             <!-- 一级菜单 -->
             <div v-for="item in allMenuList">
-              <el-checkbox style="color:red" :label="item.id">{{item.name}}</el-checkbox>
+              <el-checkbox style="color:red" :label="item.id" ref="currentRoleId" >{{item.name}}</el-checkbox>
+              <!-- 二级菜单 -->
               <p style="margin-left:5px;text-align:left" v-for="child in item.child">
                 <el-checkbox style="color:red" :label="child.id">{{child.name}}</el-checkbox>
               </p>
             </div>
-            <!-- 二级菜单 -->
-            
           </el-checkbox-group>
 
           <!-- <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
@@ -327,6 +326,10 @@ export default {
     };
   },
   methods: {
+    test(e) {
+     this.editForm.menuIds = this.menuList
+     console.log(this.editForm.permissionIds)
+    },
     //修改
     update() {
       
@@ -350,7 +353,7 @@ export default {
     //编辑
     editData(row,list) {
       console.log("hhhhhhhhhhh",this.$refs["tumitable"])
-      
+      console.log(row,list)
       this.row = row;
       var _this = this;
       var roleId = _this.row.id;
@@ -360,6 +363,7 @@ export default {
       var menuL= _this.row.menuList;
       var menuLists = []
       var allMenuList = list
+      var allMenuListId = []
       menuL.forEach(item => {
         menuLists.push(item.id)
         if(item.child){
@@ -368,17 +372,17 @@ export default {
           })
         }
       })
-      // list.forEach(item => {
-      //   allMenuList.push({id:item.id,name:item.name})
-      //   if(item.child){
-      //     item.child.forEach(childItem => {
-      //       allMenuList.push({id:childItem.id,name:childItem.name})
-      //     })
-      //   }
-      // })
+       list.forEach(item => {
+         allMenuListId.push(item.id)
+         if(item.child){
+           item.child.forEach(childItem => {
+             allMenuListId.push(childItem.id)
+           })
+         }
+       })
       _this.allMenuList = allMenuList
       _this.menuList = menuLists
-      console.log("xxx",menuLists,allMenuList,list)
+      console.log("xxx",_this.menuList,_this.allMenuList)
       //根据当前景区id获取景点信息
       
       //清空editForm
@@ -386,7 +390,10 @@ export default {
 
       //复制row到editForm
       common.copyattribute(_this.editForm, row);
-      // console.log(_this.editForm)
+      _this.editForm.roleId = row.id
+      _this.editForm.permissionIds = ["111"]
+      _this.editForm.menuIds = _this.menuList
+      console.log("对象复制",_this.editForm, row)
       //显示编辑页面
       this.editVisible = true;
                 

@@ -256,6 +256,7 @@ export default {
     
     // 操作按钮
     handleEdit(index, row) {
+      console.log("data",row)
       var api = "/user/selectMenuByType";
       var value = row.menuList[0].type
       var _this = this;
@@ -372,11 +373,12 @@ export default {
     },
     //拉取表格数据
     getTableData(sform) {
+      console.log(sform)
       var vm = this;
       this.loading = true;
 
       var api = this.queryapi;
-
+      
       sform.pageSize = this.pageSize;
       sform.pageNum = this.currentPage;
 
@@ -409,6 +411,7 @@ export default {
         .catch(function(error) {
           setTimeout(() => {
             alert("请求失败");
+            console.log(error)
           }, 150);
         });
     },
