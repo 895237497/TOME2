@@ -35,9 +35,9 @@
     <!-- 当天人流量 -->
     <div id="flux">
       <span>实时客流量</span>
-      <div><p v-for="item in personCount">
-       {{item.value[1]}}
-      </p></div>
+      <div>
+        <p v-for="item in personCount">{{item.value[1]}}</p>
+      </div>
       <div id="main2"></div>
     </div>
     <!-- 图标 -->
@@ -66,13 +66,14 @@
 import { MP } from "./map.js";
 import BMap from "BMap";
 import { path } from "../../../api/api.js";
+import axios from "axios";
 var eCharts = require("echarts");
 
 export default {
   data() {
     return {
       sum: "",
-      personCount:''
+      personCount: ""
     };
   },
   methods: {
@@ -83,19 +84,19 @@ export default {
       map.enableScrollWheelZoom();
       map.addControl(new BMap.NavigationControl()); //添加默认缩放平移控件
       var customLayer;
-      // function addCustomLayer(keyword) {
-      //   if (customLayer) {
-      //     map.removeTileLayer(customLayer);
-      //   }
-      //   customLayer = new BMap.CustomLayer({
-      //     geotableId: 30960,
-      //     q: "", //检索关键字
-      //     tags: "", //空格分隔的多字符串
-      //     filter: "" //过滤条件,参考http://lbsyun.baidu.com/lbs-geosearch.htm#.search.nearby
-      //   });
-      //   map.addTileLayer(customLayer);
-      //   customLayer.addEventListener("hotspotclick", callback);
-      // }
+      function addCustomLayer(keyword) {
+        if (customLayer) {
+          map.removeTileLayer(customLayer);
+        }
+        customLayer = new BMap.CustomLayer({
+          geotableId: 30960,
+          q: "", //检索关键字
+          tags: "", //空格分隔的多字符串
+          filter: "" //过滤条件,参考http://lbsyun.baidu.com/lbs-geosearch.htm#.search.nearby
+        });
+        map.addTileLayer(customLayer);
+        customLayer.addEventListener("hotspotclick", callback);
+      }
       function callback(e) {
         //单击热点图层
         var customPoi = e.customPoi; //poi的默认字段
@@ -138,19 +139,76 @@ export default {
         map: map
       });
 
+      //var ary = new Array();
+      //arylist = result.split(";");
+      //for (var i = 0; i < arylist.length; i++) {
+      //    var strary = new Array();
+      //    strary = arylist[i].split(",");
+      //    var poi = new BMap.Point(strary[2], strary[3]);
+      //    map.centerAndZoom(poi, 20);
+      //    var myIcon = new BMap.Icon("/img/heart.png", new BMap.Size(35, 35));
+      //    if (strary[7] == '1') {
+      //        myIcon = new BMap.Icon("/img/mark_b3.png", new BMap.Size(35, 35));
+      //    }
+      //    else {
+      //        myIcon = new BMap.Icon("/img/mark_gray3.png", new BMap.Size(35, 35));
+      //    }
+      //    var marker = new BMap.Marker(poi, { icon: myIcon });
+      //    map.addOverlay(marker);
+
+      //    var infoWindow = new BMap.InfoWindow(getInfoContent(strary[5].replace(/%/g, ","), strary[4], strary[1], strary[6], strary[0], strary[7], strary[9], strary[10], strary[11]), { width: 128 });
+      //    marker.openInfoWindow(infoWindow, poi);
+      //    (function () {
+      //        var infoWindow = new BMap.InfoWindow(getInfoContent(strary[5].replace(/%/g, ","), strary[4], strary[1], strary[6], strary[0], strary[7], strary[9], strary[10], strary[11]), { width: 128 });
+      //        marker.addEventListener("click", function (e) { this.openInfoWindow(infoWindow, e.point); });
+      //    })();
+      //}
+
       //click--点击事件获取经纬度
       map.addEventListener("click", function(e) {
         var lng = e.point.lng;
         var lat = e.point.lat;
         var p1 = new BMap.Point(lng, lat);
         // var marker = new BMap.Marker(p1);  // 创建标注
+        var api = "/device/terminal/selectTerminalCoordinate";
+        var token = localStorage.getItem("token");
         var myIcon = new BMap.Icon(
-          "http://developer.baidu.com/map/jsdemo/img/fox.gif",
-          // imgurl =  '../../../../assets/images/zaixian.png',
-
-          new BMap.Size(300, 157)
+          //  "http://developer.baidu.com/map/jsdemo/img/fox.gif",
+          "http://tomepicture.zhihuiquanyu.com/online-icon.png",
+          new BMap.Size(30, 40)
         );
-        var marker2 = new BMap.Marker(p1, { icon: myIcon }); // 创建标注
+        var myIcon1 = new BMap.Icon(
+          "http://tomepicture.zhihuiquanyu.com/offline-icon.png",
+          new BMap.Size(30, 40)
+        );
+        axios
+          .get(path + api, {
+            headers: {
+              Authorization: "Bearer" + token
+            }
+          })
+          .then(response => {
+            let res = response;
+            console.log("是否在线返回的数据", res.data.value);
+
+            var resdata = res.data.value;
+            for (var i = 0; i < resdata.length; i++) {
+              if (resdata[i].isOnline === 1) {
+                // console.log("lon:", resdata[i].lon, ",lat:" + resdata[i].lat);
+                console.log("加载在线图标");
+                myIcon;
+              } else {
+                console.log("加载离线图标");
+                myIcon;
+              }
+            }
+          });
+        // var myIcon = new BMap.Icon(
+        //   "http://developer.baidu.com/map/jsdemo/img/fox.gif",
+        //   // "../../../assets/images/zaixian.png",
+        //   new BMap.Size(300, 157)
+        // );
+        var marker2 = new BMap.Marker(p1, { icon: myIcon, myIcon1 }); // 创建标注
         map.addOverlay(marker2); // 将标注添加到地图中
         // map.addOverlay(marker2); // 将标注添加到地图中
       });
@@ -207,7 +265,7 @@ export default {
         data.push(randomData());
       }
 
-    let  option = {
+      let option = {
         // title: {
         //   text: "动态数据 + 时间坐标轴"
         // },
@@ -232,18 +290,18 @@ export default {
         // },
         xAxis: {
           type: "time",
-          spliNumber:2,
-          scale:true,
-          show:false,
+          spliNumber: 2,
+          scale: true,
+          show: false,
           splitLine: {
             show: false
           }
         },
         yAxis: {
           type: "value",
-          spliNumber:2,
-          scale:true,
-          show:false,
+          spliNumber: 2,
+          scale: true,
+          show: false,
           boundaryGap: [0, "100%"],
           splitLine: {
             show: false
@@ -270,20 +328,20 @@ export default {
         myChart.setOption({
           series: [
             {
-              data: data              
+              data: data
             }
-          ]          
+          ]
         });
       }, 600);
 
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
-      console.log("data",data);
-      console.log('------------')
-        console.log(this.personCount)
-       console.log('------------')
+      // console.log("data", data);
+      // console.log("------------");
+      // console.log(this.personCount);
+      // console.log("------------");
       //  this.personCount = JSON.parse(JSON.stringify(data))
-       this.personCount = data
+      this.personCount = data;
     },
 
     // 查询设备总数及在线数量
@@ -311,10 +369,9 @@ export default {
     this.map();
 
     this.finddevicecount();
-
     this.lineCharts();
-    console.log("sdfsd",this.personCount[0].value[1])
-  },
+    console.log("sdfsd", this.personCount[0].value[1]);
+  }
 };
 </script>
 
@@ -379,17 +436,17 @@ export default {
       color: #fff;
       text-align: center;
     }
-    div{
+    div {
       height: 60px;
       overflow: hidden;
       p {
-      background: #fbfbfbc7;
-      // height: 270px;
-      font-size: 40px;
-      text-align: center;
-      line-height: 60px;
-      color: #8c8c8c;
-    }
+        background: #fbfbfbc7;
+        // height: 270px;
+        font-size: 40px;
+        text-align: center;
+        line-height: 60px;
+        color: #8c8c8c;
+      }
     }
     #main2 {
       width: 100%;
@@ -413,6 +470,75 @@ export default {
       }
     }
   }
+  // body, html{
+  // 		width: 100%;
+  // 		height: 100%;
+  // 		margin:0;
+  // 		font-family:"微软雅黑";
+  // 		font-size:14px;
+  // 	}
+  // 	#l-map {
+  // 		width:100%;
+  // 		height:500px;
+  // 		overflow: hidden;
+  // 	}
+  // 	#result{
+  // 		width:100%;
+  // 	}
+  // 	li{
+  // 		line-height:28px;
+  // 	}
+  // 	.cityList{
+  // 		height: 320px;
+  // 		width:372px;
+  // 		overflow-y:auto;
+  // 	}
+  // 	.sel_container{
+  // 		z-index:9999;
+  // 		font-size:12px;
+  // 		position:absolute;
+  // 		right:0px;
+  // 		top:0px;
+  // 		width:140px;
+  // 		background:rgba(255,255,255,0.8);
+  // 		height:30px;
+  // 		line-height:30px;
+  // 		padding:5px;
+  // 	}
+  // 	.map_popup {
+  // 		position: absolute;
+  // 		z-index: 200000;
+  // 		width: 382px;
+  // 		height: 344px;
+  // 		right:0px;
+  // 		top:40px;
+  // 	}
+  // 	.map_popup .popup_main {
+  // 		background:#fff;
+  // 		border: 1px solid #8BA4D8;
+  // 		height: 100%;
+  // 		overflow: hidden;
+  // 		position: absolute;
+  // 		width: 100%;
+  // 		z-index: 2;
+  // 	}
+  // 	.map_popup .title {
+  // 		background: url("http://map.baidu.com/img/popup_title.gif") repeat scroll 0 0 transparent;
+  // 		color: #6688CC;
+  // 		font-weight: bold;
+  // 		height: 24px;
+  // 		line-height: 25px;
+  // 		padding-left: 7px;
+  // 	}
+  // 	.map_popup button {
+  // 		background: url("http://map.baidu.com/img/popup_close.gif") no-repeat scroll 0 0 transparent;
+  // 		cursor: pointer;
+  // 		height: 12px;
+  // 		position: absolute;
+  // 		right: 4px;
+  // 		top: 6px;
+  // 		width: 12px;
+  // 	}
 }
 </style>
 
