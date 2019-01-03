@@ -258,7 +258,7 @@ export default {
     handleEdit(index, row) {
       console.log("data",row)
       var api = "/user/selectMenuByType";
-      var value = row.menuList[0].type
+      var value = row.menuList.length === 0 ? "" : row.menuList[0].type
       var _this = this;
       var token = localStorage.getItem("token");
       this.$axios
@@ -271,7 +271,7 @@ export default {
           let list = {};
           list = JSON.parse(JSON.stringify(response.data.value));
            this.$emit("editData",row,list);
-          console.log(_this.menuList, "获取到的菜单········");
+          console.log(list, "获取到的菜单········");
         });
       console.log("index",index, "row",row);
      

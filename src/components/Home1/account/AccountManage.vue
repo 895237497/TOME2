@@ -34,8 +34,8 @@
         :rules="addFormRules"
         style="width:100%;border-top: 2px solid #FCD4B0;"
       >
-        <el-form-item style="margin: 47px auto 30px;width: 330px;" label="用户名" prop="nickname">
-          <el-input v-model="addForm.nickname" autocomplete="off" placeholder="请输入真实姓名"></el-input>
+        <el-form-item style="margin: 47px auto 30px;width: 330px;" label="用户名" prop="nickName">
+          <el-input v-model="addForm.nickName" autocomplete="off" placeholder="请输入真实姓名"></el-input>
         </el-form-item>
 
         <el-form-item style="margin: 30px auto;width: 330px;" label="登录名" prop="username">
@@ -63,14 +63,28 @@
           style="margin: 30px auto;width: 330px;"
           prop="name"
         >
-          <span v-model="addForm.userSceneries" ></span>
-        </el-form-item>
 
-        <el-form-item style="width:330px;margin: 30px auto;" prop="name">
-          <el-input v-model="addForm.name" autocomplete="off" placeholder="请输入相关景区"></el-input>                           
+          <el-select
+          v-model="addForm.userSceneries"
+          value-key="id"
+          multiple
+          filterable
+          :clearable="true"
+          default-first-option
+          placeholder="请选择或搜索景区"
+          @change="getSceneries()"
+          >
+          <el-option
+            v-for="item in nameList"
+            :key="item.id"
+            :label="item.name"
+            :name="item.name"
+            :value="{'id':parseInt(item.id),'name':item.name}" ref="xx">
+          </el-option>
+        </el-select>
         </el-form-item>
-
-        <el-form-item prop="name">
+        
+        <!-- <el-form-item prop="name">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>用户名</span>
@@ -79,7 +93,7 @@
               <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
             </div>
           </el-card>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -178,33 +192,27 @@ export default {
       }
     };
     return {
-       showresetButton:false,
-       powerOff:true,
-        pageSize:10,
-        pageNum:1,
-        contenttitl: {
-        name: "账号分配",
-        description: "账号管理",
-        tabledesctiption: "共有位置版发射源",
-        unit: "个"
+      showresetButton:false,
+      powerOff:true,
+      pageSize:10,
+      pageNum:1,
+      contenttitl: {
+      name: "账号分配",
+      description: "账号管理",
+      tabledesctiption: "共有位置版发射源",
+      unit: "个"
       },
       queryapi: "/user/selectUserByPage",
-      delapi: "/user/ forbidUser",
+      delapi: "/user/forbidUser",
       saveapi: "/user/register",
       updateapi: "/user/updateUserByUserId",
       scenerySpotId: "",
       editVisible: false,
       addForm: {
-        nickname: '',
+        nickName: '',
         username: '',
         password: '',
-        // sceneryName: '',
-        name:'',
         userSceneries:[],
-        id:'',
-        roleId:''
-				
-			
       },
       editForm: {
         id: "",
@@ -265,7 +273,7 @@ export default {
           subs: [
             {
               label: "用户名",
-              prop: "nickname",
+              prop: "nickName",
               width: "200",
               type: "number",
               editable: true,
@@ -420,7 +428,7 @@ export default {
         username: [
           { required: true, message: "请输入登录名", trigger: "blur" }
         ],
-        nickname: [
+        nickName: [
           { required: true, message: "请输入登录名", trigger: "blur" }
         ],
         password: [
@@ -441,6 +449,9 @@ export default {
     };
   },
   methods: {
+    getSceneries(){
+      console.log(this.value10,this.addForm.userSceneries)
+    },
     //修改
     update() {
       var _this = this;
@@ -490,7 +501,9 @@ export default {
     clearData() {
       var _this = this;
       //清空editForm
-      common.clearattribute(_this.addForm);
+      common.clearattribute(_this.addForm)
+      this.addForm.userSceneries = []
+      
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -524,8 +537,7 @@ export default {
         )
         .then(response => {
           console.log(response,"我要的list集合的数据是--------");
-          
-					return _this.roleIdList = response.data.value.list;
+					 _this.roleIdList = response.data.value.list;
 					//  console.log(_this.roleIdList,"拿到的数据是----");
 					 
         });
@@ -542,7 +554,7 @@ export default {
           { headers: { Authorization: "Bearer " + token } }
         )
         .then(response => {
-          return   _this.nameList = response.data.value	
+             _this.nameList = response.data.value	
              console.log(_this.nameList,"我要的景区名字的数据是----");
              			 
         });
@@ -614,20 +626,20 @@ export default {
 
   },
   watch: {
-    "addForm.sceneryId": function sceneryId() {
-      //通过检测景区id的修改查询景点id
-      var api = "/scenery/webdata/getsceneryspotbysceneryid";
-      let token = localStorage.getItem("token");
-      let sform = {
-        sceneryId: this.addForm.sceneryId
-      };
-      var vm = this;
-      this.addForm.scenerySpotId = "";
+    // "addForm.sceneryId": function sceneryId() {
+    //   //通过检测景区id的修改查询景点id
+    //   var api = "/scenery/webdata/getsceneryspotbysceneryid";
+    //   let token = localStorage.getItem("token");
+    //   let sform = {
+    //     sceneryId: this.addForm.sceneryId
+    //   };
+    //   var vm = this;
+    //   this.addForm.scenerySpotId = "";
 
-      common.commonPost(path + api, sform, token, function(data) {
-        vm.sceneryspotlist = data.value;
-      });
-    },
+    //   common.commonPost(path + api, sform, token, function(data) {
+    //     vm.sceneryspotlist = data.value;
+    //   });
+    // },
     "editForm.sceneryId": function sceneryId(value) {
       //alert(value != )
 

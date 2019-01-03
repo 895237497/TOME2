@@ -65,7 +65,7 @@
               <el-checkbox :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
             </p>
             <!-- 二级菜单 -->
-            <span style="margin-left:5px;text-align:left">
+            <span style="margin-left:15px;text-align:left">
               <el-checkbox v-for="(item1,index) in item.child" :label="item1.id">{{item1.name}}</el-checkbox>
             </span>
           </el-checkbox-group>
@@ -124,15 +124,20 @@
           label="选择权限"
           prop="menuIds"
         >
-          <el-checkbox-group v-model="menuList"  @change="test($event)">
+          <el-checkbox-group v-model="MenuPermList" @change="test($event)">
             <!-- 一级菜单 -->
-            <div v-for="item in allMenuList">
-              <el-checkbox style="color:red" :label="item.id" ref="currentRoleId" >{{item.name}}</el-checkbox>
-              <!-- 二级菜单 -->
-              <p style="margin-left:5px;text-align:left" v-for="child in item.child">
-                <el-checkbox style="color:red" :label="child.id">{{child.name}}</el-checkbox>
-              </p>
-            </div>
+            <el-checkbox-group v-model="menuList"  @change="test($event)">
+              <div v-for="item in allMenuList" :key="item.id">
+                <p><el-checkbox :label="item.id" ref="currentRoleId" >{{item.name}}</el-checkbox></p>
+                <!-- 二级菜单 -->
+                <span style="margin-left:15px;text-align:left" v-for="child in item.child" :key="child.id">
+                  <el-checkbox :label="child.id" :disabled="menuList.indexOf(child.parentId) === -1 ? true : false">{{child.name}}</el-checkbox>
+                </span>
+                <el-checkbox-group v-model="permissionList" @change="test($event)">
+                  <el-checkbox :label="permiss.id" v-if="item.permissionList" v-for="permiss in item.permissionList" :key="permiss.id" style="margin-left:15px;text-align:left" :disabled="menuList.indexOf(item.id) === -1 ? true : false">{{permiss.name}}</el-checkbox>
+                </el-checkbox-group>
+              </div>
+            </el-checkbox-group>
           </el-checkbox-group>
 
           <!-- <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
@@ -185,6 +190,8 @@ export default {
       showresetButton: true,
       powerOff:true,
       menuList: [],
+      permissionList: [],
+      MenuPermList: [],
       allMenuList: [],
       contenttitl: {
         name: "账号管理",
@@ -328,7 +335,9 @@ export default {
   methods: {
     test(e) {
      this.editForm.menuIds = this.menuList
-     console.log(this.editForm.permissionIds)
+     this.editForm.permissionIds = this.permissionList
+     console.log(this.editForm.menuIds,this.editForm.permissionIds)
+     console.log(e)
     },
     //修改
     update() {
@@ -339,10 +348,14 @@ export default {
       console.log("update...............................");
       console.log(sform);
       var api = this.updateapi;
-      common.commonUpdateByPost(path + api, sform, token, function() {
-        _this.refreshTable();
-        _this.editVisible = false;
-      });
+     if(this.menuList.length === 0){
+       alert("请至少选择一项")
+     }else{
+        common.commonUpdateByPost(path + api, sform, token, function() {
+          _this.refreshTable();
+          _this.editVisible = false;
+        });
+     }
     },
      handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
@@ -362,27 +375,39 @@ export default {
       var type = _this.row.menuList[0].type;
       var menuL= _this.row.menuList;
       var menuLists = []
+      var menu = []
+      var permiss = []
       var allMenuList = list
-      var allMenuListId = []
+      // var allMenuListId = []
       menuL.forEach(item => {
         menuLists.push(item.id)
+        menu.push(item.id)
         if(item.child){
           item.child.forEach(childItem => {
             menuLists.push(childItem.id)
+            menu.push(childItem.id)
+          })
+        }
+        if(item.permissionList){
+          item.permissionList.forEach(permissItem => {
+            menuLists.push(permissItem.id)
+            permiss.push(permissItem.id)
           })
         }
       })
-       list.forEach(item => {
-         allMenuListId.push(item.id)
-         if(item.child){
-           item.child.forEach(childItem => {
-             allMenuListId.push(childItem.id)
-           })
-         }
-       })
+      // list.forEach(item => {
+      //   allMenuListId.push(item.id)
+      //   if(item.child){
+      //     item.child.forEach(childItem => {
+      //       allMenuListId.push(childItem.id)
+      //     })
+      //   }
+      // })
       _this.allMenuList = allMenuList
-      _this.menuList = menuLists
-      console.log("xxx",_this.menuList,_this.allMenuList)
+      _this.MenuPermList = menuLists
+      _this.menuList = menu
+      _this.permissionList = permiss
+      console.log("菜单",_this.menuList,"权限",_this.permissionList,"菜单权限",_this.MenuPermList,_this.allMenuList)
       //根据当前景区id获取景点信息
       
       //清空editForm
@@ -391,9 +416,9 @@ export default {
       //复制row到editForm
       common.copyattribute(_this.editForm, row);
       _this.editForm.roleId = row.id
-      _this.editForm.permissionIds = ["111"]
+      _this.editForm.permissionIds = _this.permissionList
       _this.editForm.menuIds = _this.menuList
-      console.log("对象复制",_this.editForm, row)
+      console.log("对象复制",_this.editForm, row,this.row)
       //显示编辑页面
       this.editVisible = true;
                 
@@ -525,6 +550,7 @@ export default {
           for (var i = 0; i < list.length; i++) {
             menus.push(list[i].name);
           }
+          console.log(response)
           // _this.addForm.menuIds=menus;
           console.log(_this.menuList, "获取到的菜单········");
         });
