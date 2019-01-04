@@ -139,31 +139,6 @@ export default {
         map: map
       });
 
-      //var ary = new Array();
-      //arylist = result.split(";");
-      //for (var i = 0; i < arylist.length; i++) {
-      //    var strary = new Array();
-      //    strary = arylist[i].split(",");
-      //    var poi = new BMap.Point(strary[2], strary[3]);
-      //    map.centerAndZoom(poi, 20);
-      //    var myIcon = new BMap.Icon("/img/heart.png", new BMap.Size(35, 35));
-      //    if (strary[7] == '1') {
-      //        myIcon = new BMap.Icon("/img/mark_b3.png", new BMap.Size(35, 35));
-      //    }
-      //    else {
-      //        myIcon = new BMap.Icon("/img/mark_gray3.png", new BMap.Size(35, 35));
-      //    }
-      //    var marker = new BMap.Marker(poi, { icon: myIcon });
-      //    map.addOverlay(marker);
-
-      //    var infoWindow = new BMap.InfoWindow(getInfoContent(strary[5].replace(/%/g, ","), strary[4], strary[1], strary[6], strary[0], strary[7], strary[9], strary[10], strary[11]), { width: 128 });
-      //    marker.openInfoWindow(infoWindow, poi);
-      //    (function () {
-      //        var infoWindow = new BMap.InfoWindow(getInfoContent(strary[5].replace(/%/g, ","), strary[4], strary[1], strary[6], strary[0], strary[7], strary[9], strary[10], strary[11]), { width: 128 });
-      //        marker.addEventListener("click", function (e) { this.openInfoWindow(infoWindow, e.point); });
-      //    })();
-      //}
-
       //click--点击事件获取经纬度
       map.addEventListener("click", function(e) {
         var lng = e.point.lng;
@@ -189,18 +164,22 @@ export default {
           })
           .then(response => {
             let res = response;
-            console.log("是否在线返回的数据", res.data.value);
-
+            // console.log("是否在线返回的数据", res.data.value);
             var resdata = res.data.value;
             for (var i = 0; i < resdata.length; i++) {
-              if (resdata[i].isOnline === 1) {
-                // console.log("lon:", resdata[i].lon, ",lat:" + resdata[i].lat);
-                console.log("加载在线图标");
-                myIcon;
+              // 判断是否在线
+              if (resdata[i].isOnline == 1) {
+                var p1 = [resdata[i].lon + "," + resdata[i].lat];
+                p1.push(myIcon);
+                console.log(p1[1], "加载在线图标",p1);
+
               } else {
-                console.log("加载离线图标");
-                myIcon;
+                var p1 = [resdata[i].lon + "," + resdata[i].lat];
+                p1.push(myIcon1);
+                console.log(p1[1], "加载离线图标",p1 );
               }
+              var marker2 = new BMap.Marker(p1, { icon: myIcon, myIcon1 }); // 创建标注
+              map.addOverlay(marker2); // 将标注添加到地图中
             }
           });
         // var myIcon = new BMap.Icon(
@@ -208,8 +187,8 @@ export default {
         //   // "../../../assets/images/zaixian.png",
         //   new BMap.Size(300, 157)
         // );
-        var marker2 = new BMap.Marker(p1, { icon: myIcon, myIcon1 }); // 创建标注
-        map.addOverlay(marker2); // 将标注添加到地图中
+        // var marker2 = new BMap.Marker(p1, { icon: myIcon, myIcon1 }); // 创建标注
+        // map.addOverlay(marker2); // 将标注添加到地图中
         // map.addOverlay(marker2); // 将标注添加到地图中
       });
 
