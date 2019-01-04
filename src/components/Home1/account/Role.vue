@@ -20,6 +20,7 @@
       v-on:addData2="addData2"
       v-on:editData="editData"
       ref="tumitable"
+      :role="role"
     />
 
     <!--添加-->
@@ -186,6 +187,7 @@ export default {
       }
     };
     return {
+      role: "role",
       isChecked:true,
       showresetButton: true,
       powerOff:true,

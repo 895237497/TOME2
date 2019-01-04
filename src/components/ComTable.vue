@@ -221,7 +221,8 @@ export default {
     "showShutDown",
     "showEnergizer",
     "showAddtravel",
-     "showcleartravel"
+    "showcleartravel",
+    "role",
   ],
   methods: {
     //添加数据
@@ -256,24 +257,28 @@ export default {
     
     // 操作按钮
     handleEdit(index, row) {
-      console.log("data",row)
-      var api = "/user/selectMenuByType";
-      var value = row.menuList.length === 0 ? "" : row.menuList[0].type
-      var _this = this;
-      var token = localStorage.getItem("token");
-      this.$axios
-        .get(path + api + "?type=" + value, {
-          headers: {
-            Authorization: "Bearer" + token
-          }
-        })
-        .then(response => {
-          let list = {};
-          list = JSON.parse(JSON.stringify(response.data.value));
-           this.$emit("editData",row,list);
-          console.log(list, "获取到的菜单········");
-        });
-      console.log("index",index, "row",row);
+      console.log("data",row,this.role)
+      if(this.role === "role"){
+        var api = "/user/selectMenuByType";
+        var value = row.menuList.length === 0 ? "" : row.menuList[0].type
+        var _this = this;
+        var token = localStorage.getItem("token");
+        this.$axios
+            .get(path + api + "?type=" + value, {
+              headers: {
+                Authorization: "Bearer" + token
+              }
+            })
+            .then(response => {
+              let list = {};
+              list = JSON.parse(JSON.stringify(response.data.value));
+              this.$emit("editData",row,list);
+              console.log(list, "获取到的菜单········");
+            });
+            console.log("index",index, "row",row);
+        }else{
+             this.$emit("editData",row);
+        }
      
     },
     showDelVisible() {

@@ -114,8 +114,8 @@
         :rules="addFormRules"
         style="width:100%;border-top: 2px solid #FCD4B0;"
       >
-       <el-form-item style="margin: 47px auto 30px;width: 330px;" label="用户名" prop="nickname">
-          <el-input v-model="editForm.nickname" autocomplete="off"></el-input>
+       <el-form-item style="margin: 47px auto 30px;width: 330px;" label="用户名" prop="nickName">
+          <el-input v-model="editForm.nickName" autocomplete="off"></el-input>
         </el-form-item>
 
         <el-form-item style="margin: 30px auto;width: 330px;" label="登录名" prop="username">
@@ -143,11 +143,27 @@
           style="margin: 30px auto;width: 330px;"
           prop="sceneryName"
         >
-          <span>00000</span>
-          <el-input v-model="editForm.sceneryName" autocomplete="off" placeholder="请输入相关景区"></el-input>
+          <el-select
+            v-model="editForm.userSceneries"
+            value-key="id"
+            multiple
+            filterable
+            :clearable="true"
+            default-first-option
+            placeholder="请选择或搜索景区"
+            @change="getSceneries()"
+          >
+            <el-option
+              v-for="item in nameList"
+              :key="item.id"
+              :label="item.name"
+              :name="item.name"
+              :value="{'id':parseInt(item.id),'name':item.name}">
+            </el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item prop="sceneryId">
+        <!-- <el-form-item prop="sceneryId">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>用户名</span>
@@ -156,7 +172,7 @@
               <el-checkbox >{{item.name}}</el-checkbox>
             </div>
           </el-card>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -216,13 +232,11 @@ export default {
       },
       editForm: {
         id: "",
-        nickname: '',
+        nickName: '',
         username: '',
-        password: '',
-        // sceneryName: '',
-        name:'',
-        // sceneryId:'',
-        roleId:''
+        password: '',  
+        roleId:'',
+        userSceneries:[],
       },
       showAdd: false,
       numberValidateForm: {
@@ -450,7 +464,7 @@ export default {
   },
   methods: {
     getSceneries(){
-      console.log(this.value10,this.addForm.userSceneries)
+      console.log(this.editForm.userSceneries)
     },
     //修改
     update() {
@@ -468,6 +482,7 @@ export default {
     },
     //编辑
     editData(row) {
+      console.log(row)
       this.row = row;
       var _this = this;
 
@@ -478,7 +493,21 @@ export default {
 
       //复制row到editForm
       common.copyattribute(_this.editForm, row);
-
+      var id = row.sceneryIds.split(",")
+      var name = row.sceneryNames.split(",")
+      var arr = []
+      for(var i = 0; i < id.length; i++){
+        var obj = {}
+        for(var j = 0; j < name.length; j++){
+          if(i === j){
+            obj.id = parseInt(id[i]);
+            obj.name = name[j]
+          }
+        }
+        arr.push(obj)
+      }
+      _this.editForm.userSceneries = arr
+      console.log(_this.editForm,row)
       //显示编辑页面
       this.editVisible = true;
     },
@@ -640,27 +669,27 @@ export default {
     //     vm.sceneryspotlist = data.value;
     //   });
     // },
-    "editForm.sceneryId": function sceneryId(value) {
-      //alert(value != )
+    // "editForm.sceneryId": function sceneryId(value) {
+    //   //alert(value != )
 
-      if (this.row.sceneryId == value) {
-        this.editForm.scenerySpotId = this.row.scenerySpotId;
-      } else {
-        this.editForm.scenerySpotId = "";
-      }
-      //通过检测景区id的修改查询景点id
-      var api = "/scenery/webdata/getsceneryspotbysceneryid";
-      let token = localStorage.getItem("token");
-      let sform = {
-        sceneryId: this.editForm.sceneryId
-      };
-      var vm = this;
-      this.addForm.scenerySpotId = "";
+    //   if (this.row.sceneryId == value) {
+    //     this.editForm.scenerySpotId = this.row.scenerySpotId;
+    //   } else {
+    //     this.editForm.scenerySpotId = "";
+    //   }
+    //   //通过检测景区id的修改查询景点id
+    //   var api = "/scenery/webdata/getsceneryspotbysceneryid";
+    //   let token = localStorage.getItem("token");
+    //   let sform = {
+    //     sceneryId: this.editForm.sceneryId
+    //   };
+    //   var vm = this;
+    //   this.addForm.scenerySpotId = "";
 
-      common.commonPost(path + api, sform, token, function(data) {
-        vm.sceneryspoteditlist = data.value;
-      });
-    }
+    //   common.commonPost(path + api, sform, token, function(data) {
+    //     vm.sceneryspoteditlist = data.value;
+    //   });
+    // }
   }
 };
 </script>
