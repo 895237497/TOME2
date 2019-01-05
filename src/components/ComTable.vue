@@ -27,7 +27,7 @@
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
       <el-button round @click="addData" size="small" v-if="showAdd">新增</el-button>
-      <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
+      <el-button round @click="addData2" size="small" v-if="showAdd2">新增2</el-button>
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
       <el-button round @click="exportData" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
@@ -93,7 +93,7 @@
               v-if="!showButtonEdit"
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >1编辑</el-button>
             <el-button size="mini"  @click="openDelete(scope.$index, scope.row)">删除</el-button>
 
             <el-button size="mini" v-if="!showresetButton" type="warning" @click="resetpwd(scope.$index, scope.row)">重置密码</el-button>
@@ -260,7 +260,8 @@ export default {
     "showShutDown",
     "showEnergizer",
     "showAddtravel",
-    "showcleartravel"
+    "showcleartravel",
+    "role",
   ],
   methods: {
     // 重置密码
@@ -307,7 +308,49 @@ export default {
     },
     //导出数据
     exportData() {
-      alert("导出");
+      this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let headers = { 'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json',
+                      'token':this.token
+                    }   
+          this.$axios({
+              method: 'get',
+              url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
+              headers: headers,
+              responseType: 'blob',
+          }).then((res) => {
+                this.$message({
+                type: 'success',
+                message: '导出成功!'
+                });
+                console.log(res)
+                const link = document.createElement('a')
+                let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob);
+                let num = ''
+                for(let i=0;i < 10;i++){
+                num += Math.ceil(Math.random() * 10)
+                }
+                link.setAttribute('download', '用户_' + num + '.xlsx')
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              }).catch(error => {
+                  console.log(error)
+              })
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      
     },
     // 分配设备
     taskData(){
@@ -319,14 +362,76 @@ export default {
     },
     // 导出设备
     exportReceipt(){
-      
+      this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let headers = { 'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json',
+                      'token':this.token
+                    }   
+          this.$axios({
+              method: 'get',
+              url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
+              headers: headers,
+              responseType: 'blob',
+          }).then((res) => {
+                this.$message({
+                type: 'success',
+                message: '导出成功!'
+                });
+                console.log(res)
+                const link = document.createElement('a')
+                let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob);
+                let num = ''
+                for(let i=0;i < 10;i++){
+                num += Math.ceil(Math.random() * 10)
+                }
+                link.setAttribute('download', '用户_' + num + '.xlsx')
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              }).catch(error => {
+                  console.log(error)
+              })
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       
     },
     
     // 操作按钮
     handleEdit(index, row) {
-      console.log(index, row);
-      this.$emit("editData", row);
+      console.log("data",row,this.role)
+      if(this.role === "role"){
+        var api = "/user/selectMenuByType";
+        var value = row.menuList.length === 0 ? "" : row.menuList[0].type
+        var _this = this;
+        var token = localStorage.getItem("token");
+        this.$axios
+            .get(path + api + "?type=" + value, {
+              headers: {
+                Authorization: "Bearer" + token
+              }
+            })
+            .then(response => {
+              let list = {};
+              list = JSON.parse(JSON.stringify(response.data.value));
+              this.$emit("editData",row,list);
+              console.log(list, "获取到的菜单········");
+            });
+            console.log("index",index, "row",row);
+        }else{
+             this.$emit("editData",row);
+        }
+     
     },
     showDelVisible() {
       var multipleSelection = this.multipleSelection;
@@ -440,11 +545,12 @@ export default {
     },
     //拉取表格数据
     getTableData(sform) {
+      console.log(sform)
       var vm = this;
       this.loading = true;
 
       var api = this.queryapi;
-
+      
       sform.pageSize = this.pageSize;
       sform.pageNum = this.currentPage;
 
@@ -462,7 +568,6 @@ export default {
         .then(function(response) {
           let ret = response;
           console.log(ret,"这是我要的数据----");
-          
           if (ret.status == "200") {
             vm.tableData = ret.data.value.list;
             console.log(vm.tableData);
@@ -478,6 +583,7 @@ export default {
         .catch(function(error) {
           setTimeout(() => {
             alert("请求失败");
+            console.log(error)
           }, 150);
         });
     },

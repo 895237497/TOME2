@@ -20,7 +20,16 @@
         @close="handleClose"
         theme="dark"
       >
-        <el-submenu index="1">
+        <el-submenu v-for="item in menu" :index="item.id" :key="item.id">
+            <template slot="title">
+              <i class="icon iconfont icon-jingqu"></i>
+              <span>{{item.name}}</span>
+            </template>
+            <el-menu-item-group v-for="itemChild in item.child" :key="itemChild.id">
+              <el-menu-item :index="'/'+itemChild.url">{{itemChild.name}}</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+        <!-- <el-submenu index="1">
           <template slot="title">
             <i class="icon iconfont icon-shouye"></i>
             <span>首页</span>
@@ -91,8 +100,8 @@
             <el-menu-item index="/AccountManage">账号管理</el-menu-item>
             <el-menu-item index="/Role">角色分配</el-menu-item>
           </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
+        </el-submenu> -->
+      </el-menu> 
     </div>
     <!-- 右边内容 -->
     <div class="right">
@@ -109,8 +118,32 @@ export default {
   data() {
     return {
       isCollapse: true,
-      lists: ""
+      lists: "",
+      menu:[]
     };
+  },
+  mounted(){
+    var token = localStorage.getItem("token");
+    this.$axios
+      .get("http://39.98.168.124:8080/manager/me", {
+        headers: {
+          Authorization: "Bearer" + token
+        }
+      })
+      .then(response => {
+        console.log(response);
+        this.menu = response.data.value
+        var arr = []
+        this.menu.forEach(item => {
+          if(item.child){
+            item.child.forEach(child => {
+              arr.push({name:child.name,url:child.url})
+            })
+          }
+        })
+        
+        console.log(arr)
+      });
   },
   methods: {
     handleOpen(key, keyPath) {

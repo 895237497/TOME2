@@ -20,6 +20,7 @@
       v-on:addData2="addData2"
       v-on:editData="editData"
       ref="tumitable"
+      :role="role"
     />
 
     <!--添加-->
@@ -45,6 +46,7 @@
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
           <select
             v-model="addForm.type"
+            ref="getroleName"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
           >
             <option value="0">超级管理员</option>
@@ -64,7 +66,7 @@
               <el-checkbox :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
             </p>
             <!-- 二级菜单 -->
-            <span style="margin-left:5px;text-align:left">
+            <span style="margin-left:15px;text-align:left">
               <el-checkbox v-for="(item1,index) in item.child" :label="item1.id">{{item1.name}}</el-checkbox>
             </span>
           </el-checkbox-group>
@@ -108,13 +110,14 @@
         </el-form-item>
 
         <el-form-item label="身份" style="margin: 30px auto;width: 330px;" prop="type">
-          <select
+          <input type="text" :value="editForm.type===0 ? '超级管理员' : '景区管理员'">
+          <!-- <select
             v-model="editForm.type"
             style="width:230px;height:40px; dispaly:inline;border:1px solid #e5e5e5;border-radius:6px;outline:none"
           >
             <option value="0">超级管理员</option>
             <option value="1">景区管理员</option>
-          </select>
+          </select> -->
         </el-form-item>
         <el-form-item
           v-model="menuList"          
@@ -122,27 +125,31 @@
           label="选择权限"
           prop="menuIds"
         >
-          <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId" @change="handleCheckedCitiesChange">
+          <el-checkbox-group v-model="MenuPermList" @change="test($event)">
             <!-- 一级菜单 -->
-            <p>
-              <el-checkbox :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-            </p>
-            <!-- 二级菜单 -->
-            <span style="margin-left:5px;text-align:left">
-              <el-checkbox v-for="(item1,index) in item.child" :label="item1.id">{{item1.name}}</el-checkbox>
-            </span>
+            <el-checkbox-group v-model="menuList"  @change="test($event)">
+              <div v-for="item in allMenuList" :key="item.id">
+                <p><el-checkbox :label="item.id" ref="currentRoleId" >{{item.name}}</el-checkbox></p>
+                <!-- 二级菜单 -->
+                <span style="margin-left:15px;text-align:left" v-for="child in item.child" :key="child.id">
+                  <el-checkbox :label="child.id" :disabled="menuList.indexOf(child.parentId) === -1 ? true : false">{{child.name}}</el-checkbox>
+                </span>
+                <el-checkbox-group v-model="permissionList" @change="test($event)">
+                  <el-checkbox :label="permiss.id" v-if="item.permissionList" v-for="permiss in item.permissionList" :key="permiss.id" style="margin-left:15px;text-align:left" :disabled="menuList.indexOf(item.id) === -1 ? true : false">{{permiss.name}}</el-checkbox>
+                </el-checkbox-group>
+              </div>
+            </el-checkbox-group>
           </el-checkbox-group>
 
-          <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
-            <!-- 循环子类 -->
+          <!-- <el-checkbox-group v-model="editForm.permissionIds" v-for="item in menuList" prop="roleId">
             <span style="margin-left:16px">
               <el-checkbox
                 v-for="(subItem,index) in item.permissionList"
                 :label="subItem.id"
-               
+                :key="subItem.id"
               >{{subItem.name}}</el-checkbox>
             </span>
-          </el-checkbox-group>
+          </el-checkbox-group> -->
         </el-form-item>
       </el-form>
 
@@ -180,10 +187,14 @@ export default {
       }
     };
     return {
+      role: "role",
       isChecked:true,
       showresetButton: true,
       powerOff:true,
       menuList: [],
+      permissionList: [],
+      MenuPermList: [],
+      allMenuList: [],
       contenttitl: {
         name: "账号管理",
         description: "角色分配",
@@ -201,7 +212,7 @@ export default {
         code: "",
         menuIds: [],
         name: "",
-        permissionIds: []
+        permissionIds: [],
       },
       editForm: {
         id: "",
@@ -213,9 +224,6 @@ export default {
         menuIds: []
       },
       showAdd: false,
-      // numberValidateForm: {
-      //   age: ""
-      // },
       addVisible: false,
       showQueryDate: true,
       showImg: true,
@@ -282,24 +290,6 @@ export default {
             }
           ]
         },
-
-        // {
-        //   hasSubs: false,
-        //   subs: [
-        //     {
-        //       label: "景区id",
-        //       prop: "sceneryId",
-        //       width: "200",
-        //       type: "number",
-        //       editable: true,
-        //       hidden:true,
-        //       searchable: true,
-        //       addable: true,
-        //       unsortable: true,
-        //       align: "center"
-        //     }
-        //   ]
-        // },
         {
           hasSubs: false,
           subs: [
@@ -345,18 +335,29 @@ export default {
     };
   },
   methods: {
+    test(e) {
+     this.editForm.menuIds = this.menuList
+     this.editForm.permissionIds = this.permissionList
+     console.log(this.editForm.menuIds,this.editForm.permissionIds)
+     console.log(e)
+    },
     //修改
     update() {
+      
       var _this = this;
       var sform = this.editForm;
       var token = localStorage.getItem("token");
       console.log("update...............................");
       console.log(sform);
       var api = this.updateapi;
-      common.commonUpdateByPost(path + api, sform, token, function() {
-        _this.refreshTable();
-        _this.editVisible = false;
-      });
+     if(this.menuList.length === 0){
+       alert("请至少选择一项")
+     }else{
+        common.commonUpdateByPost(path + api, sform, token, function() {
+          _this.refreshTable();
+          _this.editVisible = false;
+        });
+     }
     },
      handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
@@ -365,16 +366,50 @@ export default {
       },
     
     //编辑
-    editData(row) {
+    editData(row,list) {
+      console.log("hhhhhhhhhhh",this.$refs["tumitable"])
+      console.log(row,list)
       this.row = row;
       var _this = this;
       var roleId = _this.row.id;
       // console.log(roleId,"获取到当前的Id");
        
       var type = _this.row.menuList[0].type;
-      var menuLists= _this.row.menuList;
-      
-      _this.menuList = menuLists
+      var menuL= _this.row.menuList;
+      var menuLists = []
+      var menu = []
+      var permiss = []
+      var allMenuList = list
+      // var allMenuListId = []
+      menuL.forEach(item => {
+        menuLists.push(item.id)
+        menu.push(item.id)
+        if(item.child){
+          item.child.forEach(childItem => {
+            menuLists.push(childItem.id)
+            menu.push(childItem.id)
+          })
+        }
+        if(item.permissionList){
+          item.permissionList.forEach(permissItem => {
+            menuLists.push(permissItem.id)
+            permiss.push(permissItem.id)
+          })
+        }
+      })
+      // list.forEach(item => {
+      //   allMenuListId.push(item.id)
+      //   if(item.child){
+      //     item.child.forEach(childItem => {
+      //       allMenuListId.push(childItem.id)
+      //     })
+      //   }
+      // })
+      _this.allMenuList = allMenuList
+      _this.MenuPermList = menuLists
+      _this.menuList = menu
+      _this.permissionList = permiss
+      console.log("菜单",_this.menuList,"权限",_this.permissionList,"菜单权限",_this.MenuPermList,_this.allMenuList)
       //根据当前景区id获取景点信息
       
       //清空editForm
@@ -382,7 +417,10 @@ export default {
 
       //复制row到editForm
       common.copyattribute(_this.editForm, row);
-      // console.log(_this.editForm)
+      _this.editForm.roleId = row.id
+      _this.editForm.permissionIds = _this.permissionList
+      _this.editForm.menuIds = _this.menuList
+      console.log("对象复制",_this.editForm, row,this.row)
       //显示编辑页面
       this.editVisible = true;
                 
@@ -391,15 +429,20 @@ export default {
     },
     //刷新表格
     refreshTable() {
+      
       this.$refs["tumitable"].refreshTable();
       this.addVisible = false;
     },
     save() {
+      console.log("ggg",this.addForm)
+      console.log(this.$refs)
       var sform = this.addForm;
       var token = localStorage.getItem("token");
       var _this = this;
       var api = this.saveapi;
       common.commonUploadByPost(path + api, sform, token, function() {
+        
+        // console.log(_this.$refs["tumitable"])
         _this.refreshTable();
       });
     },
@@ -445,6 +488,7 @@ export default {
           }
         )
         .then(function(response) {
+          console.log(response)
           let data = response.data.value;
 
           let scenerylist = data.slice();
@@ -488,43 +532,6 @@ export default {
     //查询景区服务商并并获取表格数据
     this.getSceneryList();
   },
-  // watch:{
-  // 	"addForm.sceneryId": function sceneryId(){
-  // 			//通过检测景区id的修改查询景点id
-  // 			var api = "/scenery/webdata/getsceneryspotbysceneryid";
-  // 			let token = localStorage.getItem("token");
-  // 			let sform = {
-  // 				sceneryId:this.addForm.sceneryId
-  // 			}
-  // 			var vm = this;
-  // 			this.addForm.scenerySpotId='';
-
-  // 		    	 common.commonPost(path+api,sform,token,function(data){
-  // 		    	 	vm.sceneryspotlist=data.value
-  // 		    	 });
-  // 		 },
-  // 		 "editForm.sceneryId": function sceneryId(value){
-  // 		 	//alert(value != )
-
-  // 		 	if(this.row.sceneryId == value){
-  // 		 		this.editForm.scenerySpotId = this.row.scenerySpotId;
-  // 		 	}else{
-  // 		 		this.editForm.scenerySpotId=''
-  // 		 	}
-  // 			//通过检测景区id的修改查询景点id
-  // 			var api = "/scenery/webdata/getsceneryspotbysceneryid";
-  // 			let token = localStorage.getItem("token");
-  // 			let sform = {
-  // 				sceneryId:this.editForm.sceneryId
-  // 			}
-  // 			var vm = this;
-  // 			this.addForm.scenerySpotId='';
-
-  //     	 common.commonPost(path+api,sform,token,function(data){
-  //     	 		vm.sceneryspoteditlist=data.value
-  //     	 });
-  // 		 }
-  // },
   watch: {
     "addForm.type": function getmune(value) {
       var api = "/user/selectMenuByType";
@@ -545,6 +552,7 @@ export default {
           for (var i = 0; i < list.length; i++) {
             menus.push(list[i].name);
           }
+          console.log(response)
           // _this.addForm.menuIds=menus;
           console.log(_this.menuList, "获取到的菜单········");
         });
