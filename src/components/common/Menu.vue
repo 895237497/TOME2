@@ -135,9 +135,11 @@ export default {
         this.menu = response.data.value
         var arr = []
         this.menu.forEach(item => {
-          item.child.forEach(child => {
-            arr.push({name:child.name,url:child.url})
-          })
+          if(item.child){
+            item.child.forEach(child => {
+              arr.push({name:child.name,url:child.url})
+            })
+          }
         })
         
         console.log(arr)

@@ -239,7 +239,49 @@ export default {
     },
     //导出数据
     exportData() {
-      alert("导出");
+      this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let headers = { 'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json',
+                      'token':this.token
+                    }   
+          this.$axios({
+              method: 'get',
+              url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
+              headers: headers,
+              responseType: 'blob',
+          }).then((res) => {
+                this.$message({
+                type: 'success',
+                message: '导出成功!'
+                });
+                console.log(res)
+                const link = document.createElement('a')
+                let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob);
+                let num = ''
+                for(let i=0;i < 10;i++){
+                num += Math.ceil(Math.random() * 10)
+                }
+                link.setAttribute('download', '用户_' + num + '.xlsx')
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              }).catch(error => {
+                  console.log(error)
+              })
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      
     },
     // 分配设备
     taskData(){
@@ -251,7 +293,48 @@ export default {
     },
     // 导出设备
     exportReceipt(){
-      
+      this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let headers = { 'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json',
+                      'token':this.token
+                    }   
+          this.$axios({
+              method: 'get',
+              url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
+              headers: headers,
+              responseType: 'blob',
+          }).then((res) => {
+                this.$message({
+                type: 'success',
+                message: '导出成功!'
+                });
+                console.log(res)
+                const link = document.createElement('a')
+                let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob);
+                let num = ''
+                for(let i=0;i < 10;i++){
+                num += Math.ceil(Math.random() * 10)
+                }
+                link.setAttribute('download', '用户_' + num + '.xlsx')
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              }).catch(error => {
+                  console.log(error)
+              })
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       
     },
     
