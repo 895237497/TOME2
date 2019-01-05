@@ -22,7 +22,7 @@
       >
         <el-submenu v-for="item in menu" :index="item.id" :key="item.id">
             <template slot="title">
-              <i class="icon iconfont icon-jingqu"></i>
+              <img :src="item.url" alt="">
               <span>{{item.name}}</span>
             </template>
             <el-menu-item-group v-for="itemChild in item.child" :key="itemChild.id">
