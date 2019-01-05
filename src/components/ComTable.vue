@@ -44,7 +44,7 @@
     </el-row>
 
     <!--表格开始-->
-    <el-row style="margin-left: 89px;">
+    <el-row style="margin-left: 74px;">
       <el-table
         :data="tableData"
         border
@@ -97,7 +97,7 @@
             <el-button size="mini"  @click="openDelete(scope.$index, scope.row)">删除</el-button>
 
             <el-button size="mini" v-if="!showresetButton" type="warning" @click="resetpwd(scope.$index, scope.row)">重置密码</el-button>
-            <el-button size="mini" v-if="!powerOff" type="danger" @click="resetpwd(scope.$index, scope.row)">关机</el-button>
+            <el-button size="mini" v-if="!powerOff" type="danger" @click="downOff(scope.$index, scope.row)">关机</el-button>
 
           </template>
         </el-table-column>
@@ -126,23 +126,33 @@
       </span>
     </el-dialog>
     <!--重置密码  -->
-    <!-- <el-dialog title="修改密码" :visible.sync="resetVisible">
-      <el-form :model="form">
-        <el-form-item label="活动名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+
+       <el-dialog title :visible.sync="resetVisible" style width="520px" :close-on-click-modal="false">
+      <div
+        style="margin:-30px 0 6px 29px;font: 18px '微软雅黑';border-left: 4px solid #F98319;padding-left: 9px;color:#FEA062 ;"
+      >修改密码</div>
+      <el-form
+        :model="Form"
+        ref="Form"
+        label-width="100px"
+        :rules="Rules"
+        style="width:100%;border-top: 2px solid #FCD4B0;"
+      >
+        <el-form-item label="新密码" style="margin-top:30px" prop='oldPassword'>
+          <el-input v-model="Form.oldPassword" autocomplete="off"  style="width:300px;margin:0 auto;" placeholder="请输入您的新密码"></el-input>
         </el-form-item>
-        <el-form-item label="活动区域" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="再次确认" style="margin-top:30px" prop='newPassword'>
+          <el-input v-model="Form.newPassword" autocomplete="off" style="width:300px;margin:0 auto;" placeholder="请再次输入您的新密码"></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="resetVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div>
-    </el-dialog> -->
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetVisible = false" size="small">清空</el-button>
+        <el-button type="primary" style="background: #FA841A;" size="small" @click="save">保存</el-button>
+      </span>
+    </el-dialog>
+
+    
 
     <!--添加-->
     <!--表格添加-->
@@ -174,6 +184,20 @@ export default {
     AddForm
   },
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value == undefined || value === "") {
+        callback(new Error("密码不能为空"));
+      } else {
+        if (this.Form !== "") {
+          var num = Number(value);
+          if (typeof num === "number" && num % 1 === 0 && num > 0) {
+            callback();
+          } else {
+            callback(new Error("密码不正确"));
+          }
+        }
+      }
+    };
     return {
       addtitle: "表格添加",
       addFormVisible: false,
@@ -184,10 +208,25 @@ export default {
       hidePagination: false,
       total: 0,
       delVisible: false,
+      resetVisible:false,
       multipleSelection: "",
       currentPage: 1,
       sceneryId: "1",
-      tableData: []
+      tableData: [],
+      Form:{
+        oldPassword:'',
+        newPassword:'',
+        id:''
+      },
+     Rules: {
+        oldPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" }
+        ],
+        newPassword: [
+          { required: true, message: "请再次输入密码", trigger: "blur" }
+        ],
+      },
+      row:''
     };
   },
   props: [
@@ -225,6 +264,36 @@ export default {
     "role",
   ],
   methods: {
+    // 重置密码
+    save(row){
+      var api = '/user/resetPassword'
+      var _this = this
+      var token = localStorage.getItem('token')
+      this.$axios.post(path + api,{
+        id:_this.Form.id,
+        oldPassword:_this.Form.oldPassword,
+        newPassword:_this.Form.newPassword
+      },{
+        headers:{Authorization:"Bearer" + token}
+      }).then(response=>{
+        if(response.data.resultStatus.resultCode === "0000"){
+          this.$message({
+            message:"密码修改成功",
+            type:'success',
+            duration: 1200
+          })
+          
+        }else{
+          this.$message({
+            message:"密码修改失败",
+             type:'error',
+            duration:900
+          })
+          refreshTable(Form)
+        }
+        
+      })
+    },
     //添加数据
     addData() {
       this.addFormVisible = true;
@@ -376,6 +445,19 @@ export default {
       }
       this.delVisible = true;
     },
+    // 重置密码
+    // showResetVisible() {
+    //   var multipleSelection = this.multipleSelection;
+    //   if (multipleSelection == undefined || multipleSelection.length == 0) {
+    //     this.$message({
+    //       message: "未选中数据",
+    //       type: "error",
+    //       duration: 1200
+    //     });
+    //     return;
+    //   }
+    //   this.resetVisible = true;
+    // },
     deleteByIds() {
       var multipleSelection = this.multipleSelection;
       var delIds = [];
@@ -442,9 +524,11 @@ export default {
       this.delVisible = true;
     },
     resetpwd(index,row){
-     var arr = new Array();
-     arr.push(row);
-     this.multipleSelection = arr;
+     console.log(index, row);
+      var _this = this
+      _this.Form.id = row.id
+      console.log(" _this.form.id", _this.Form.id);
+      
      this.resetVisible = true;
     },
     // 分页
@@ -527,5 +611,13 @@ export default {
 </script>
 
 <style lang="less">
+// section{
+//   width: 100%;
+//   height: 100%;
+//   #tablearea{
+//     width: 80%;
+//   }
+// }
+
 </style>
 

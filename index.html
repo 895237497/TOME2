@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>tumi</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <div id="allmap"></div>
-    <!-- built files will be auto injected -->
-    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8rfzjZUiuce8cTopKFRyQVMYn7qFqG0N&callback=init"></script> -->
 
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8rfzjZUiuce8cTopKFRyQVMYn7qFqG0N"></script>
-	<!-- 加载百度地图样式信息窗口 -->
-	<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
-	<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
-	<!-- 加载城市列表 -->
-	<script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>tumi</title>
+  <style>
+    @media (max-width: 960px){
+    body,html{
+        width:100%;
+        margin: 0 auto;
+        height: 100%;
+    }
+}
+    </style>
+</head>
 
-  </body>
-  <!-- <div id="app">
+<body>
+  <div id="app"></div>
+  <div id="allmap"></div>
+  <!-- built files will be auto injected -->
+  <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8rfzjZUiuce8cTopKFRyQVMYn7qFqG0N&callback=init"></script> -->
+
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8rfzjZUiuce8cTopKFRyQVMYn7qFqG0N"></script>
+  <!-- 加载百度地图样式信息窗口 -->
+  <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+  <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+  <!-- 加载城市列表 -->
+  <script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+
+</body>
+<!-- <div id="app">
     <router-view></router-view>
   </div> -->
+
 </html>

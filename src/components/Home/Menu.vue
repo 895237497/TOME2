@@ -29,15 +29,7 @@
             <el-menu-item index="/BMapcomponents">首页</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <!-- <el-submenu index="2">
-          <template slot="title">
-            <i class="icon iconfont icon-jingqu"></i>
-            <span>景区服务商</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="/SpotService">景区服务商</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu> -->
+       
         <el-submenu index="3">
           <template slot="title">
             <i class="icon iconfont icon-shezhi1"></i>
@@ -60,8 +52,7 @@
             <el-menu-item index="/Equipment">设备信息</el-menu-item>
             <el-menu-item index="/Firms">成员信息</el-menu-item>
             <el-menu-item index="/Guidemessage">导游信息</el-menu-item>
-            <!-- <el-menu-item index="/EmittersCount">发射源</el-menu-item>
-            <el-menu-item index="/Place">位置版</el-menu-item> -->
+           
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="5">
@@ -70,11 +61,7 @@
             <span>运营管理</span>
           </template>
           <el-menu-item-group>
-            <!-- <el-menu-item index="/PlantLeasing">行程信息</el-menu-item>
-            <el-menu-item index="/PeopleCounting">RFID发射源统计</el-menu-item>
-            <el-menu-item index="/PeopleCounting">位置版发射源统计</el-menu-item>
-            <el-menu-item index="/Fence">电子围栏统计</el-menu-item>
-            <el-menu-item index="/Sos">SOS统计</el-menu-item> -->
+           
             <el-menu-item index="/Travel">行程信息</el-menu-item>
             <el-menu-item index="/RFID">RFID发射源统计</el-menu-item>
             <el-menu-item index="/Seat">位置版发射源统计</el-menu-item>
@@ -93,16 +80,7 @@
             <el-menu-item index="/PromotionLogs">设备租赁次数统计</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <!-- <el-submenu index="7">
-          <template slot="title">
-            <i class="icon iconfont icon-zhanghao00"></i>
-            <span>账号分配</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="/AccountManage">账号管理</el-menu-item>
-            <el-menu-item index="/Role">角色分配</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu> -->
+      
       </el-menu>
     </div>
     <!-- 右边内容 -->
@@ -131,25 +109,7 @@ export default {
       console.log(key, keyPath);
     }
   }
-  // mounted() {
-  //   var token = localStorage.getItem("token");
-  //   //alert(token)
-  //   var _this = this;
-  //   //var access_token=this.access_token
-  //   var access_token = "58a38873-7471-4104-baca-b07884447136 ";
-  //   axios
-  //     .get("http://192.168.0.39:8080/manager/me", {
-  //       headers: {
-  //         Authorization: "Bearer" + token
-  //       }
-  //     })
-  //     .then(response => {
-  //       console.log(response);
-  //       if (response.data.resultStatus.resultCode === "0000") {
-  //         return (this.lists = response.data.value);
-  //       }
-  //     });
-  // }
+ 
 };
 </script>
 <style lang="less">
@@ -176,7 +136,6 @@ export default {
       color: #7e7876;
     }
     .icon {
-      
       color: #ff6600;
     }
     .el-radio-button__inner {
@@ -223,6 +182,6 @@ export default {
       margin-left: 20px;
     }
   }
- 
+  
 }
 </style>

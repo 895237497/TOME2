@@ -58,12 +58,7 @@
           </el-select>
         </el-form-item>
 
-        <!-- <el-form-item ref="select1" label="状态" style="margin: 30px auto;width: 330px;" prop="isAllot">
-							    <el-select  v-model="addForm.scenerySpotId" placeholder="请选择活景点">
-							    	
-							     <el-option v-for="item in sceneryspotlist" :label="item.name" :value="item.id"></el-option>
-							    </el-select>
-        </el-form-item>-->
+        
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -105,11 +100,7 @@
           </el-select>
         </el-form-item>
 
-        <!-- <el-form-item ref="select1" label="状态" style="margin: 30px auto;width: 330px;" prop="isAllot">
-							    <el-select  v-model="addForm.scenerySpotId" placeholder="请选择活景点">
-							     <el-option v-for="item in sceneryspotlist" :label="item.name" :value="item.id"></el-option>
-							    </el-select>
-        </el-form-item>-->
+       
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -130,20 +121,7 @@
         :rules="addFormRules"
         style="width:100%;border-top: 2px solid #FCD4B0;"
       >
-        <!-- <el-form-item style="margin: 47px auto 30px;width: 330px;" label="设备IMEI" prop="imei" >
-							    <el-input  v-model="editForm.imei" autocomplete="off"></el-input>
-							  </el-form-item>
-							  
-							  <el-form-item style="margin: 30px auto;width: 330px;" label="机器码" prop="codeMachine" >
-							    <el-input  v-model="editForm.codeMachine" autocomplete="off"></el-input>
-							  </el-form-item>
-							  
-							  <el-form-item style="margin: 30px auto;width: 330px;" label="手机号码" prop="telephone" >
-							    <el-input  v-model="editForm.telephone" autocomplete="off"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item style="margin: 30px auto;width: 330px;" label="状态" prop="isAllot" >
-							    <el-input  v-model="addForm.isAllot" autocomplete="off"></el-input>
-        </el-form-item>-->
+        
         <el-form-item
           label="景区"
           style="margin: 30px auto;width: 330px;margin-top:30px"
@@ -154,12 +132,7 @@
           </el-select>
         </el-form-item>
 
-        <!-- <el-form-item ref="select1" label="状态" style="margin: 30px auto;width: 330px;" prop="isAllot">
-							    <el-select  v-model="addForm.scenerySpotId" placeholder="请选择活景点">
-							    	
-							     <el-option v-for="item in sceneryspotlist" :label="item.name" :value="item.id"></el-option>
-							    </el-select>
-        </el-form-item>-->
+       
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -457,9 +430,7 @@ export default {
         codeMachine: [
           { required: true, message: "请输入机器码", trigger: "blur" }
         ],
-        // radius: [
-        //   { validator: validatePass,required: true, trigger: 'blur' }
-        // ],
+       
         telephone: [
           { required: true, message: "请输入电话号码", trigger: "blur" }
         ],

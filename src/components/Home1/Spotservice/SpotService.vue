@@ -199,39 +199,7 @@ export default {
       scenerylistquery: [],
       sceneryspoteditlist: [],
       tableitems: [
-        // {
-        //     hasSubs: false,
-        //     subs: [
-        //       {
-        //         label: "发射源id",
-        //         prop: "id",
-        //         width: "100",
-        //         type: "number",
-        //         editable: true,
-        //         searchable: true,
-        //         addable: true,
-        //         hidden:true,
-        //         unsortable: true,
-        //         align: "center"
-        //       }
-        //     ]
-        //  },
-        // {
-        //   hasSubs: false,
-        //   subs: [
-        //     {
-        //       label: "发射源编号",
-        //       prop: "no",
-        //       width: "100",
-        //       type: "number",
-        //       editable: true,
-        //       searchable: true,
-        //       addable: false,
-        //       unsortable: true,
-        //       align: "center"
-        //     }
-        //   ]
-        // },
+       
         {
           hasSubs: false,
           subs: [
@@ -312,9 +280,7 @@ export default {
               addable: true,
               unsortable: true,
               align: "center"
-              // format: function (row) {
-              //     return row.lon +","+row.lat;
-              // }
+            
             }
           ]
         },
@@ -365,9 +331,7 @@ export default {
               addable: false,
               unsortable: true,
               align: "center"
-              // format:function(row){
-              // 	return common.dateformat(row.createTime);
-              // }
+              
             }
           ]
         },
@@ -384,9 +348,7 @@ export default {
               addable: false,
               unsortable: true,
               align: "center"
-              // format:function(row){
-              // 	return common.dateformat(row.createTime);
-              // }
+              
             }
           ]
         }
@@ -394,9 +356,7 @@ export default {
       addFormRules: {
         name: [{ required: true, message: "请输入景区名称", trigger: "blur" }],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        // radius: [
-        //   { validator: validatePass,required: true, trigger: 'blur' }
-        // ],
+        
         chargeName: [
           { required: true, message: "请输入负责人姓名", trigger: "blur" }
         ],
@@ -416,9 +376,7 @@ export default {
             trigger: "blur"
           }
         ]
-        // lat: [
-        //   {type:'number', required: true, message: '请输入合法纬度，例如39.123456', trigger: 'blur' }
-        // ]
+        
       },
       row: ""
     };

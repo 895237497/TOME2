@@ -223,22 +223,7 @@ export default {
             }
           ]
        },
-        {
-          hasSubs: false,
-          subs: [
-            {
-              label: "序号",
-              prop: "no",
-              width: "96",
-              type: "number",
-              editable: true,
-              searchable: true,
-              addable: false,
-              unsortable: true,
-              align: "center"
-            }
-          ]
-        },
+        
          {
           hasSubs: false,
           subs: [
@@ -260,7 +245,7 @@ export default {
           subs: [
             {
               label: "位置",
-              prop: "machine",
+              prop: "address",
               width: "200",
               type: "number",
               editable: true,
@@ -276,7 +261,7 @@ export default {
           subs: [
             {
               label: "手机号",
-              prop: "sceneryName",
+              prop: "Phone",
               width: "200",
               type: "selection",
               selectlist: [{},{}],
@@ -289,23 +274,7 @@ export default {
           ]
         },
         
-        {
-          hasSubs: false,
-          subs: [
-            {
-              label: "头像",
-              prop: "scenerySpotName",
-              width: "100",
-               type: "selection",
-              selectlist: [{},{}],
-              editable: true,
-              searchable: true,
-              addable: true,
-              unsortable: true,
-              align: "center"
-            }
-          ]
-        },
+       
         {
           hasSubs: false,
           subs: [
