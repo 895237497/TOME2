@@ -23,6 +23,8 @@
         <el-submenu v-for="item in menu" :index="item.id" :key="item.id">
             <template slot="title">
               <i class="icon iconfont icon-jingqu"></i>
+              <!-- <i>{{item.url}}</i> -->
+              <!-- <img src="imgurl"/> -->
               <span>{{item.name}}</span>
             </template>
             <el-menu-item-group v-for="itemChild in item.child" :key="itemChild.id">
@@ -119,7 +121,7 @@ export default {
     return {
       isCollapse: true,
       lists: "",
-      menu:[]
+      menu:[],
     };
   },
   mounted(){
@@ -132,7 +134,7 @@ export default {
       })
       .then(response => {
         console.log(response);
-        this.menu = response.data.value
+        this.menu = response.data.value     
         var arr = []
         this.menu.forEach(item => {
           if(item.child){
