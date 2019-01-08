@@ -38,7 +38,7 @@
       <el-button round @click="showDelVisible"  size="small" v-if="showcleartravel">清空行程</el-button>
 
       <el-button round  size="small" v-if="showEnergizer">添加围栏</el-button>
-      <el-button round size="small" v-if="showImpDevice">导入设备</el-button>
+      <el-button round @click="importReceipt" size="small" v-if="showImpDevice">导入设备</el-button>
       <el-button round @click="exportReceipt" size="small" v-if="showExpDevice">导出设备</el-button>
       <el-button round size="small" v-if="showShutDown">一键关机</el-button>
     </el-row>
@@ -199,6 +199,7 @@ export default {
       }
     };
     return {
+      centerDialogVisible: true,
       addtitle: "表格添加",
       addFormVisible: false,
       addloading: false,
@@ -264,6 +265,7 @@ export default {
     "role",
   ],
   methods: {
+    
     // 重置密码
     save(row){
       var api = '/user/resetPassword'
@@ -360,8 +362,14 @@ export default {
       console.log(multipleSelection);
       this.$emit("taskData",multipleSelection)
     },
+    //导入设备
+    importReceipt(){
+      this.$emit("importReceipt",this.centerDialogVisible)
+      
+    },
     // 导出设备
     exportReceipt(){
+
       this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -369,7 +377,7 @@ export default {
         }).then(() => {
           let headers = { 'Access-Control-Allow-Origin': '*',
                           'Content-Type': 'application/json; application/octet-stream',
-                          'token':localStorage.getItem("token")
+                          'Authorization':"Bearer" + localStorage.getItem("token")
                         }   
           this.$axios({
               method: 'get',
@@ -381,9 +389,9 @@ export default {
                 type: 'success',
                 message: '导出成功!'
                 });
-                console.log(new Uint8Array(res))
+                console.log(res)
                 const link = document.createElement('a')
-                let blob = new Blob([res.data],{type: 'application/ms-excel'});
+                let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
                 link.style.display = 'none'
                 link.href = URL.createObjectURL(blob);
                 let num = ''
@@ -580,11 +588,11 @@ export default {
             });
           }
         })
-        .catch(function(error) {
+        .catch(err => {
           setTimeout(() => {
-            alert("请求失败");
-            console.log(error)
+            vm.alertInfo("请求失败!" + error);
           }, 150);
+          
         });
     },
     alertInfo(msg) {

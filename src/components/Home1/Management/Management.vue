@@ -22,6 +22,7 @@
       v-on:addData2="addData2"
       v-on:editData="editData"
       v-on:taskData="taskData"
+      @importReceipt="importReceipt"
       ref="tumitable"
     />
 
@@ -140,6 +141,9 @@
         <el-button type="primary" style="background: #FA841A;" size="small" @click="saveData">保存</el-button>
       </span>
     </el-dialog>
+
+    <!-- 导入设备 -->
+    <importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" />
   </div>
 </template>
 
@@ -147,9 +151,11 @@
 import ComTable from "../../ComTable";
 import common from "../../common/common.js";
 import { path } from "../../../api/api";
+import importModel from "../../importModel"
 export default {
   components: {
-    ComTable
+    ComTable,
+    importModel
   },
   data() {
     //自定义校验，播报半径校验，正整数
@@ -168,8 +174,9 @@ export default {
       }
     };
     return {
-       showresetButton:true,
-       powerOff:true,
+      centerDialogVisible:false,
+      showresetButton:true,
+      powerOff:true,
       contenttitl: {
         name: "设备管理",
         description: "设备信息",
@@ -544,6 +551,12 @@ export default {
       }
       this.taskForm.ids=ids
       this.taskVisible = true;
+    },
+    hideCenterDialogVisible(){
+      this.centerDialogVisible = false
+    },
+    importReceipt(centerDialogVisible){
+      this.centerDialogVisible = centerDialogVisible
     },
     //  导出设备
     exportReceipt(){

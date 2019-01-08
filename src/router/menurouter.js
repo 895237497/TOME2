@@ -80,21 +80,21 @@ let routes = [
         children:[
               {path:"/BMapcomponents",component:BMapcomponents,name:"地图"},
               {path:"/SpotsMessages",component:SpotsMessages,name:"景点信息"},
-              {path:"/Energizer",component:Energizer,name:"景点信息"},
-              {path:"/Scenic",component:Scenic,name:"景点信息"},
-              {path:"/Tours",component:Tours,name:"景点信息"},
-              {path:"/Trace",component:Trace,name:"景点信息"},
+              {path:"/Energizer",component:Energizer,name:"电子围栏"},
+              {path:"/Scenic",component:Scenic,name:"景区服务"},
+              {path:"/Tours",component:Tours,name:"旅游团管理"},
+              {path:"/Trace",component:Trace,name:"线路信息"},
 
               {path:"/Promotions",component:Promotions,name:"客流量统计"},
               {path:"/PromotionLogs",component:PromotionLogs,name:"设备租赁次数统计"},
               {path:"/Equipment",component:Equipment,name:"设备信息"},
               {path:"/Firms",component:Firms,name:"成员信息"},
               {path:"/Guidemessage",component:Guidemessage,name:"导游信息"},
-              {path:"/Fences",component:Fences,name:"导游信息"},
-              {path:"/RFID",component:RFID,name:"导游信息"},
-              {path:"/Seat",component:Seat,name:"导游信息"},
-              {path:"/Help",component:Help,name:"导游信息"},
-              {path:"/Travel",component:Travel,name:"导游信息"},
+              {path:"/Fences",component:Fences,name:"电子围栏统计"},
+              {path:"/RFID",component:RFID,name:"RFID发射源统计"},
+              {path:"/Seat",component:Seat,name:"位置版发射源统计"},
+              {path:"/Help",component:Help,name:"SOS统计"},
+              {path:"/Travel",component:Travel,name:"行程信息"},
 
 
 
