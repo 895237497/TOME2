@@ -48,6 +48,7 @@ import { MP } from "./map.js";
 import BMap from "BMap";
 import { path } from "../../../api/api.js";
 import axios from "axios";
+import common from "../../common/date.js";
 var eCharts = require("echarts");
 
 export default {
@@ -64,7 +65,7 @@ export default {
       map.enableScrollWheelZoom();
       map.addControl(new BMap.NavigationControl()); //添加默认缩放平移控件
       map.centerAndZoom(point, 6);
-
+       
       map.addEventListener("tilesloaded", function() {
         var api = "/device/terminal/selectTerminalCoordinate";
         var token = localStorage.getItem("token");
@@ -84,68 +85,185 @@ export default {
             }
           })
           .then(response => {
-            console.log(response);
+            // console.log(response);
             let resdata = response.data.value;
+            // console.log(resdata);
+
             for (var i = 0; i < resdata.length; i++) {
               // 判断是否在线
               if (resdata[i].isOnline == 1) {
                 var p1 = new BMap.Point(resdata[i].lon, resdata[i].lat);
+                var id = resdata[i].id
+                // console.log(id);
                 var marker2 = new BMap.Marker(p1, { icon: myIcon }); // 创建标注
-                marker2.addEventListener("click", attribute);
                 map.addOverlay(marker2); // 将标注添加到地图中
-                function attribute() {
-                  var p = marker2.getPosition(); //获取marker的位置
-                  // alert("marker的位置是" + p.lng + "," + p.lat);
-                  var div = document.createElement("div");
-                  // div.show("我展示出来了")
-                }
+                var opts = {
+                  width: 200, // 信息窗口宽度
+                  height: 150, // 信息窗口高度
+                  // title: "海底捞王府井店", // 信息窗口标题
+                  enableMessage: true //设置允许信息窗发送短息
+                };
+                var infoWindow = new BMap.InfoWindow(
+                  "地址：北京市东城区王府井大街88号乐天银泰百货八层",
+                  opts
+                ); // 创建信息窗口对象
+                
+                marker2.addEventListener("click", function() {  
+                  var api ='/device/terminal/selectTerminalInfo'
+                  var _this = this                  
+                  var token = localStorage.getItem('token')
+                  axios.get(path + api,{
+                    id:_this.id
+                  },{
+                    headers:{
+                      Authorization:"Bearer" + token
+                    }
+                  }).then(response=>{
+                    console.log(response,"定位信息框");
+                    
+                  })
+                  // console.log(p1,"信息窗口位置");
+                  map.openInfoWindow(infoWindow, p1); //开启信息窗口
+                });
               } else {
                 var p1 = new BMap.Point(resdata[i].lon, resdata[i].lat);
+                 var id = resdata[i].id
+                // console.log(id);
+                // console.log("离线的p1",p1);
                 var marker2 = new BMap.Marker(p1, { icon: myIcon1 }); // 创建标注
                 // marker2.addEventListener("click", attribute);
                 map.addOverlay(marker2); // 将标注添加到地图中
-                function attribute() {
-                  var p = marker2.getPosition(); //获取marker的位置
-                  alert("marker的位置是" + p.lng + "," + p.lat);
-                }
+                var opts = {
+                  width: 200, // 信息窗口宽度
+                  height: 150, // 信息窗口高度
+                  // title: "海底捞王府井店", // 信息窗口标题
+                  enableMessage: true //设置允许信息窗发送短息
+                };
+                var infoWindow = new BMap.InfoWindow(
+                  "地址：北京市东城区王府井大街88号乐天银泰百货八层",
+                  opts
+                ); // 创建信息窗口对象
+                marker2.addEventListener("click", function() {
+                  console.log(p1, "信息窗口位置");
+                  map.openInfoWindow(infoWindow, p1); //开启信息窗口
+                });
               }
+            }
+
+            
+          });
+      });
+      map.addEventListener("tilesloaded", function() {
+        var api = "/scenery/webdata/sos/query";
+        var myIcon2 = new BMap.Icon(
+          "http://tomepicture.zhihuiquanyu.com/SOS.png",
+          new BMap.Size(71, 83)
+        );
+        var token = localStorage.getItem("token");
+        axios
+          .post(
+            path + api,
+            {},
+            {
+              headers: {
+                Authorization: "Bearer" + token
+              }
+            }
+          )
+          .then(response => {
+            var res = response.data.value.list;
+            console.log("res", res);
+
+            for (var i = 0; i < res.length; i++) {
+              // 获取经纬度
+              var reslon = res[i].lon;
+              var reslat = res[i].lat;
+              var pt = new BMap.Point(reslon, reslat); //添加标注点
+              var marker2 = new BMap.Marker(pt, { icon: myIcon2 }); //创建标注
+              map.addOverlay(marker2); //将标注添加到地图中
+              marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+              var opts = {
+                width: 300, // 信息窗口宽度
+                height: 240, // 信息窗口高度
+                title: "用户信息", // 信息窗口标题
+                enableMessage: true //设置允许信息窗发送短息
+              };
+              var infoWindow = new BMap.InfoWindow(
+                "性别：" +
+                  res[i].sex +
+                  " <br/>" +
+                  "年龄：" +
+                  res[i].age +
+                  " <br/>" +
+                  "地址：" +
+                  res[i].address +
+                  "<br/>" +
+                  "电话：" +
+                  res[i].phone +
+                  " <br/>" +
+                  "设备信息" +
+                  " <br/>" +
+                  "imei:" +
+                  res[i].imei +
+                  " <br/>" +
+                  "电量：" +
+                  res[i].battery +
+                  "%" +
+                  "<br/>" +
+                  "经纬度：" +
+                  res[i].lon +
+                  "," +
+                  res[i].lat +
+                  "<br/>" +
+                  "当前位置：" +
+                  res[i].location +
+                  "<br/>" +
+                  "所属团：" +
+                  res[i].touristTeamName +
+                  " <br/>" +
+                  "所属景区：" +
+                  res[i].sceneryName +
+                  " <br/>" +
+                  "时间：" +
+                  res[i].createTime +
+                  " <br/>",
+                   // 日期转换
+              function timeStamp(createTime){
+                  var date = new date(createTime *1000);
+                  var  Y = date.getFullYear()+'/';
+                  var M =(date.getMonth()+1 <10? '0' +(date.getMonth()+1): date.getMonth()+1)+'/';
+                  var D = date.getDate()+'/';
+                  var h = date.getHours()+ '/';
+                  var m = date.getMinutes()+'/';
+                  var s = date.getSeconds();
+                  return Y+M+D+h+m+s
+              },
+              // timeStamp(createTime);
+              // console.log(timeStamp(createTime));
+                opts
+              ); // 创建信息窗口对象
+              // 日期转换
+              // function timeStamp(createTime){
+              //     var date = new date(createTime *1000);
+              //     var  Y = date.getFullYear()+'/';
+              //     var M =(date.getMonth()+1 <10? '0' +(date.getMonth()+1): date.getMonth()+1)+'/';
+              //     var D = date.getDate()+'/';
+              //     var h = date.getHours()+ '/';
+              //     var m = date.getMinutes()+'/';
+              //     var s = date.getSeconds();
+              //     return Y+M+D+h+m+s
+              // }
+              // timeStamp(createTime)
+              // console.log(timeStamp(createTime));
+              
+              marker2.addEventListener("click", function() {
+                map.openInfoWindow(infoWindow, pt); //开启信息窗口
+              });
             }
           });
       });
-      // map.addEventListener("tilesloaded", function() {
-      //   var api = "/scenery/webdata/sos/query";
-      //   var myIcon2 = new BMap.Icon(
-      //     "http://tomepicture.zhihuiquanyu.com/SOS.png",
-      //     new BMap.Size(71, 83)
-      //   );
-      //   var token = localStorage.getItem("token");
-      //   axios
-      //     .post(
-      //       path + api,
-      //       {},
-      //       {
-      //         headers: {
-      //           Authorization: "Bearer" + token
-      //         }
-      //       }
-      //     )
-      //     .then(response => {
-      //       var res = response.data.value.list;
-      //       for (var i = 0; i < res.length; i++) {
-      //         // 获取经纬度
-      //         var reslon = res[i].lon;
-      //         var reslat = res[i].lat;
-      //         var pt = new BMap.Point(reslon, reslat);//添加标注点
-      //         var marker2 = new BMap.Marker(pt, { icon: myIcon2 });//创建标注
-      //         map.addOverlay(marker2);//将标注添加到地图中
-      //         marker2.setAnimation(BMAP_ANIMATION_BOUNCE);//跳动的动画
-      //       }
-      //       // var marker2 = new BMap.Marker(pt, { icon: myIcon2 });
-      //       // map.addOverlay(marker2);
-      //       //  marker2.setAnimation(BMAP_ANIMATION_BOUNCE);//跳动的动画
-      //     });
-      // });
     },
+
     // 统计图表
     lineCharts() {
       // 基于准备好的dom，初始化echarts实例
