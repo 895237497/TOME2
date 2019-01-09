@@ -1,4 +1,5 @@
 <template>
+  <!-- what this? -->
   <div id="Emitters">
     <ComTable
       :contenttitl="contenttitl"
@@ -26,7 +27,6 @@
       sign="设备信息"
       ref="tumitable"
     />
-
     <!--设备添加-->
     <el-dialog title :visible.sync="addVisible" style width="520px" :close-on-click-modal="false">
       <div
