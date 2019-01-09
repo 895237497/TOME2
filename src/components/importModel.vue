@@ -3,7 +3,7 @@
        <el-dialog title="请下载表格模板，填写再上传" :visible.sync="centerDialogVisible" width="30%" center :close-on-click-modal="false" :before-close="hide">
             <div class="btn_warp">
                 <el-button size="medium" @click="download">点击下载模板</el-button>
-                <el-upload class="upload-demo" :on-success="success" :show-file-list="false" action="http://192.168.0.102:8080/device/terminal/importTerminal" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <el-upload class="upload-demo" :on-success="success" :show-file-list="false" :action="updateUrl" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
             </div>
@@ -20,7 +20,7 @@
             return {
             }
         },
-        props: ["centerDialogVisible"],
+        props: ["centerDialogVisible","updateUrl","downloadUrl"],
         
         methods : {
             hide(){
@@ -29,7 +29,7 @@
             download(){
                 this.$axios({
                     method: 'get',
-                    url: 'http://39.98.168.124:8080/device/terminal/getTerminalTemplate',
+                    url: this.downloadUrl,
                     responseType: 'blob',
                 }).then((res) => {
                         console.log(res)

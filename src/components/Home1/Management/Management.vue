@@ -22,7 +22,8 @@
       v-on:addData2="addData2"
       v-on:editData="editData"
       v-on:taskData="taskData"
-      @importReceipt="importReceipt"
+      @imports="imports"
+      sign="设备信息"
       ref="tumitable"
     />
 
@@ -143,7 +144,7 @@
     </el-dialog>
 
     <!-- 导入设备 -->
-    <importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" />
+    <importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" :updateUrl="updateUrl" :downloadUrl="downloadUrl"/>
   </div>
 </template>
 
@@ -175,6 +176,8 @@ export default {
     };
     return {
       centerDialogVisible:false,
+      updateUrl:"http://39.98.168.124:8080/device/terminal/importTerminal",
+      downloadUrl:"http://39.98.168.124:8080/device/terminal/getTerminalTemplate",
       showresetButton:true,
       powerOff:true,
       contenttitl: {
@@ -555,7 +558,7 @@ export default {
     hideCenterDialogVisible(){
       this.centerDialogVisible = false
     },
-    importReceipt(centerDialogVisible){
+    imports(centerDialogVisible){
       this.centerDialogVisible = centerDialogVisible
     },
     //  导出设备
