@@ -11,8 +11,6 @@
       :showQueryDate="showQueryDate"
       :scenerylistquery="scenerylistquery"
       :showShutDown="showShutDown"
-      :showImport="showImport"
-      :showExport="showExport"
       :showDel="showDel"
       :showAdd2="showAdd2"
       :showAdd="showAdd"
@@ -178,8 +176,6 @@ export default {
       showQueryDate: true,
       showImg: true,
       showresetButton: true,
-      showImport: true,
-      showExport: true,
       showDel: true,
       showAdd2: true,
       showShutDown: true,
@@ -483,7 +479,7 @@ export default {
           //data.push({id: 0, name: "查询全部"})
           data.splice(0, 0, { id: 0, name: "查询所有" });
           _this.scenerylistquery = data;
-
+          console.log(_this.scenerylistquery)
           //获取表格数据
           _this.getTableData({});
         });

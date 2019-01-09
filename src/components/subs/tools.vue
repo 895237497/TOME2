@@ -214,7 +214,7 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.scenery">
       <span style="margin-right: 18px;">景区</span>
-      <el-select v-model="sform.scenery" size="small" filterable placeholder="请选择景区·····">
+      <el-select v-model="sform.id" size="small" filterable placeholder="请选择景区·····">
         <el-option
           v-for="item in scenerylistquery"
           :key="item.id"
@@ -316,22 +316,26 @@ export default {
         role: "",
         travel: "",
         scenery: "",
+        id: "",
         genre: "",
         service: "",
         touristTeamName: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
       }
     };
   },
   props: ["scenerylistquery", "showTools"],
   methods: {
     query() {
+     
       var ssform = this.sform;
+      console.log(ssform)
       var formdata = {};
       var scenerylist = this.scenerylistquery;
       var isAllot = this.isAllot;
-
+      console.log(scenerylist);
+      
       //封装表单数据
       for (var att in ssform) {
         if (ssform[att] != "undefined" && ssform[att] !== "") {
@@ -342,13 +346,17 @@ export default {
               ssform[att] !== ""
             ) {
               formdata[att] = ssform[att].getTime();
+              console.log(formdata[att])
             }
           } else {
             formdata[att] = ssform[att];
+            console.log(formdata[att])
           }
+        }else{
+          console.log("空")
         }
       }
-
+      console.log(formdata)
       //将searchForm传递给父组件
       this.$emit("search", formdata);
     },

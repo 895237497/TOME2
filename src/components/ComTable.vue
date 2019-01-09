@@ -29,7 +29,7 @@
       <el-button round @click="addData" size="small" v-if="showAdd">新增</el-button>
       <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
-      <el-button round @click="exportData" size="small" v-if="showExport">导出</el-button>
+      <el-button round @click="exportDatas" size="small" v-if="showExport">导出1</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
 
       <el-button round  @click="addData2" size="small" v-if="showAddDevice">添加设备</el-button>
@@ -38,7 +38,7 @@
       <el-button round @click="showDelVisible"  size="small" v-if="showcleartravel">清空行程</el-button>
 
       <el-button round  size="small" v-if="showEnergizer">添加围栏</el-button>
-      <el-button round size="small" v-if="showImpDevice">导入设备</el-button>
+      <el-button round @click="imports" size="small" v-if="showImpDevice">导入设备</el-button>
       <el-button round @click="exportReceipt" size="small" v-if="showExpDevice">导出设备</el-button>
       <el-button round size="small" v-if="showShutDown">一键关机</el-button>
     </el-row>
@@ -178,6 +178,7 @@ import ToolMenu from "./subs/tools";
 import { path } from "../api/api";
 import axios from "axios";
 import AddForm from "./subs/form/AddForm";
+import exportData from ".././js/export.js"
 export default {
   components: {
     ToolMenu,
@@ -199,6 +200,8 @@ export default {
       }
     };
     return {
+      
+      centerDialogVisible: true,
       addtitle: "表格添加",
       addFormVisible: false,
       addloading: false,
@@ -262,8 +265,10 @@ export default {
     "showAddtravel",
     "showcleartravel",
     "role",
+    "sign"
   ],
   methods: {
+    
     // 重置密码
     save(row){
       var api = '/user/resetPassword'
@@ -304,19 +309,42 @@ export default {
     },
     //导入数据
     importData() {
-      alert("导入");
+      
+      alert("导入1");
     },
     //导出数据
-    exportData() {
+    exportDatas() {
+      console.log(this.sign)
+      let url = "http://39.98.168.124:8080/device/terminal/exportTerminal"
+      exportData(url)
+    },
+    // 分配设备
+    taskData(){
+      // alert("这是分配设备事件");
+      var multipleSelection = this.multipleSelection;
+      console.log('-------------------------')
+      console.log(multipleSelection);
+      this.$emit("taskData",multipleSelection)
+    },
+    //导入设备
+    imports(){
+      this.$emit("imports",this.centerDialogVisible)
+      
+    },
+    // 导出设备
+    exportReceipt(){
+      let url = "http://39.98.168.124:8080/device/terminal/exportTerminal"
+      exportData(url)
+      // return
       // this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
       //     confirmButtonText: '确定',
       //     cancelButtonText: '取消',
       //     type: 'warning'
       //   }).then(() => {
       //     let headers = { 'Access-Control-Allow-Origin': '*',
-      //                 'Content-Type': 'application/json',
-      //                 'token':this.token
-      //               }   
+      //                     'Content-Type': 'application/json; application/octet-stream',
+      //                     'Authorization':"Bearer" + localStorage.getItem("token")
+      //                   }   
       //     this.$axios({
       //         method: 'get',
       //         url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
@@ -334,7 +362,7 @@ export default {
       //           link.href = URL.createObjectURL(blob);
       //           let num = ''
       //           for(let i=0;i < 10;i++){
-      //           num += Math.ceil(Math.random() * 10)
+      //             num += Math.ceil(Math.random() * 10)
       //           }
       //           link.setAttribute('download', '用户_' + num + '.xlsx')
       //           document.body.appendChild(link)
@@ -350,60 +378,6 @@ export default {
       //       message: '已取消删除'
       //     });          
       //   });
-      
-    },
-    // 分配设备
-    taskData(){
-      // alert("这是分配设备事件");
-      var multipleSelection = this.multipleSelection;
-      console.log('-------------------------')
-      console.log(multipleSelection);
-      this.$emit("taskData",multipleSelection)
-    },
-    // 导出设备
-    exportReceipt(){
-      this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let headers = { 'Access-Control-Allow-Origin': '*',
-                          'Content-Type': 'application/json; application/octet-stream',
-                          'token':localStorage.getItem("token")
-                        }   
-          this.$axios({
-              method: 'get',
-              url: 'http://39.98.168.124:8080/device/terminal/exportTerminal',
-              headers: headers,
-              responseType: 'blob',
-          }).then((res) => {
-                this.$message({
-                type: 'success',
-                message: '导出成功!'
-                });
-                console.log(new Uint8Array(res))
-                const link = document.createElement('a')
-                let blob = new Blob([res.data],{type: 'application/ms-excel'});
-                link.style.display = 'none'
-                link.href = URL.createObjectURL(blob);
-                let num = ''
-                for(let i=0;i < 10;i++){
-                  num += Math.ceil(Math.random() * 10)
-                }
-                link.setAttribute('download', '用户_' + num + '.xlsx')
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-              }).catch(error => {
-                  console.log(error)
-              })
-         
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
       
     },
     
@@ -580,11 +554,11 @@ export default {
             });
           }
         })
-        .catch(function(error) {
+        .catch(err => {
           setTimeout(() => {
-            alert("请求失败");
-            console.log(error)
+            vm.alertInfo("请求失败!" + error);
           }, 150);
+          
         });
     },
     alertInfo(msg) {
@@ -599,6 +573,7 @@ export default {
       });
     },
     onSearch(sform) {
+      console.log(sform)
       //this.getTableData(sform);
       //将searchForm传递给父组件
       this.$emit("search", sform);

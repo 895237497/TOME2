@@ -20,6 +20,7 @@
       v-on:addData2="addData2"
       v-on:editData="editData"
       v-on:taskData="taskData"
+      @imports="imports"
       ref="tumitable"
     />
 
@@ -144,7 +145,8 @@
         <el-button type="primary" style="background: #FA841A;" size="small" @click="update">保存</el-button>
       </span>
     </el-dialog>
-
+    <!-- 导入景点 -->
+    <importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" :updateUrl="updateUrl" :downloadUrl="downloadUrl"/>
     
   </div>
 </template>
@@ -155,12 +157,13 @@ import common from "../../common/common.js";
 import { path } from "../../../api/api";
 import Bmapcomponent from './Bmapcomponent.vue'
 import { MP } from "./map.js";
-
+import importModel from "../../importModel"
 const touristRouteIds=[this.touristRouteIds]
 export default {
   components: {
     ComTable,
-    Bmapcomponent
+    Bmapcomponent,
+    importModel
   },
   data() {
     //自定义校验，播报半径校验，正整数
@@ -179,6 +182,9 @@ export default {
       }
     };
     return {
+      centerDialogVisible:false,
+      updateUrl:"http://39.98.168.124:8080/device/terminal/importTerminal",
+      downloadUrl:"http://39.98.168.124:8080/device/terminal/getTerminalTemplate",
       showresetButton:true,
 			powerOff:true,
       touristRouteIdslist:[],
@@ -353,8 +359,13 @@ export default {
     };
   },
   methods: {
-
-     getlngLat(lngLat) {
+    hideCenterDialogVisible(){
+      this.centerDialogVisible = false
+    },
+    imports(centerDialogVisible){
+      this.centerDialogVisible = centerDialogVisible
+    },
+    getlngLat(lngLat) {
       var _this = this;
       _this.addForm.lonLat = lngLat.lng + "," + lngLat.lat;
       _this.editForm.lonLat = lngLat.lng + "," + lngLat.lat;
