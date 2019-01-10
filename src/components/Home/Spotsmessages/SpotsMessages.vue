@@ -183,8 +183,8 @@ export default {
     };
     return {
       centerDialogVisible:false,
-      updateUrl:"http://39.98.168.124:8080/device/terminal/importTerminal",
-      downloadUrl:"http://39.98.168.124:8080/device/terminal/getTerminalTemplate",
+      updateUrl:"http://192.168.0.102:8080/scenery/scenerySpot/importScenerySpot",
+      downloadUrl:"http://192.168.0.102:8080/scenery/scenerySpot/getScenerySpotTemplate",
       showresetButton:true,
 			powerOff:true,
       touristRouteIdslist:[],

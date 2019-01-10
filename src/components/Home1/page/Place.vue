@@ -22,7 +22,9 @@
 		       			v-on:search="onSearch"
 		       			v-on:addData2="addData2"
 		       			v-on:editData="editData"
-	       							ref="tumitable"/>
+								@imports="imports"
+	       				sign="rfidPosition"
+								ref="tumitable"/>
 	       	
 	   
 	       	<!--发射源添加-->
@@ -126,7 +128,7 @@
             </span>
         </el-dialog>		
 	       							
-				
+		<importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" :updateUrl="updateUrl" :downloadUrl="downloadUrl"/>				
     </div>
     
     
@@ -136,9 +138,11 @@
 import ComTable from "../../ComTable";
 import common from "../../common/common.js";
 import {path} from '../../../api/api'
+import importModel from "../../importModel"
 export default {
   components: {
-    ComTable
+		ComTable,
+		importModel
   },
   data() {
   	
@@ -160,6 +164,9 @@ export default {
         }
       };
     return {
+			centerDialogVisible:false,
+      updateUrl:"http://192.168.0.157:8080/device/rfid/importposition",
+      downloadUrl:"http://192.168.0.157:8080/device/rfid/exportposition",
 			showresetButton:true,
 			powerOff:true,
     	contenttitl:{
@@ -490,7 +497,13 @@ export default {
   	},
   	showSetting:function(name){
   		alert('hello:'+name)
-  	},
+		},
+		hideCenterDialogVisible(){
+      this.centerDialogVisible = false
+    },
+    imports(centerDialogVisible){
+      this.centerDialogVisible = centerDialogVisible
+    },
   	getSceneryList(){
   			var token = localStorage.getItem("token");
 

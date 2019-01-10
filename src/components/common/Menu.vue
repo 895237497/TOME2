@@ -125,7 +125,7 @@ export default {
   mounted(){
     var token = localStorage.getItem("token");
     this.$axios
-      .get("http://39.98.168.124:8080/manager/me", {
+      .get("http://192.168.0.102:8080/manager/me", {
         headers: {
           Authorization: "Bearer" + token
         }

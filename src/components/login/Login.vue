@@ -74,6 +74,14 @@ export default {
   //   this.getVcode();
   // },
 
+  beforeRouteLeave (to, from, next) {
+    this.ruleForm = {
+          username: "",
+          password: "",
+          code: ""
+          }
+    next()
+  },
   methods: {
     getVcode() {
       this.getCheckCode();
@@ -109,7 +117,7 @@ export default {
                     type: "success"
                   });
 
-                  this.$router.push({ path: "/index" });
+                  this.$router.push({ path: "/Empty" });
                 } else {
                   //  登录失败的错误提示
                   this.$message({

@@ -3,7 +3,7 @@
        <el-dialog title="请下载表格模板，填写再上传" :visible.sync="centerDialogVisible" width="30%" center :close-on-click-modal="false" :before-close="hide">
             <div class="btn_warp">
                 <el-button size="medium" @click="download">点击下载模板</el-button>
-                <el-upload class="upload-demo" :on-success="success" :show-file-list="false" :action="updateUrl" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <el-upload class="upload-demo" :on-success="success" :headers="token" :show-file-list="false" :action="updateUrl" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
             </div>
@@ -18,6 +18,7 @@
     export default {
         data(){
             return {
+                token:{Authorization:'Bearer' + localStorage.getItem('token')}
             }
         },
         props: ["centerDialogVisible","updateUrl","downloadUrl"],
@@ -41,7 +42,7 @@
                         for(let i=0;i < 10;i++){
                         num += Math.ceil(Math.random() * 10)
                         }
-                        link.setAttribute('download', '导入设备模板' + '.xlsx')
+                        link.setAttribute('download', '导入模板' + '.xlsx')
                         document.body.appendChild(link)
                         link.click()
                         document.body.removeChild(link)

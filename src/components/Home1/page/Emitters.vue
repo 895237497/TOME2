@@ -13,8 +13,8 @@
 		       			:showSelectionColumn="showSelectionColumn"
 		       			:showButtonEdit="showButtonEdit"
 		       			v-on:search="onSearch"
-
-	       							ref="tumitable"/>
+                sign="rfids"
+	       				ref="tumitable"/>
 	       	
     </div>
     
@@ -211,6 +211,7 @@ export default {
       ]
     };
   },
+
   methods:{
   	//修改
   	update(){
