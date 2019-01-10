@@ -219,7 +219,6 @@ export default {
         left: 34px;
       }
     }
-
     .el-radio-button__orig-radio:checked + .el-radio-button__inner {
       box-shadow: -1px 0 0 0 #ccc;
     }

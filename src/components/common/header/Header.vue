@@ -5,6 +5,15 @@
         <div class="grid-content bg-purple-dark">
           <img src="../../../assets/images/logo.png" alt srcset>
           <span>智 慧 全 域</span>
+
+          <div class="carousel">
+            <el-carousel :interval="5000"  height="60px">
+              <el-carousel-item v-for="item in scenic" :key="item.name">
+                <h5>{{ item.name }} {{item.guest}} , {{item.msg}} {{item.count}}</h5>
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+
           <div class="box">
             <span class="active">{{username}}</span>
             <span @click="backToLogin">退出</span>
@@ -22,10 +31,28 @@ export default {
   data() {
     return {
       username: "",
+      scenic:[
+        {name:'青城山今日客流量：',guest:'6428 ',msg:"青城山今日人次：",count:"12000次"},
+        {name:'武当山今日客流量：',guest:'1160 ',msg:"武当山今日人次：",count:"7623次"},
+        {name:'圆明园今日客流量：',guest:'2973 ',msg:"圆明园今日人次：",count:"6597次"},
+        {name:'武夷山今日客流量：',guest:'3500 ',msg:"武夷山今日人次：",count:"8266次"},
+        {name:'龙宫今日客流量：',guest:'7921 ',msg:"龙宫今日人次：",count:"14305次"},
+        {name:'九皇山今日客流量：',guest:'8375 ',msg:"九皇山今日人次：",count:"17032次"},
+        {name:'火焰山今日客流量：',guest:'650 ',msg:"火焰山今日人次：",count:"3726次"},
+        {name:'望江楼今日客流量：',guest:'7933 ',msg:"望江楼今日人次：",count:"10268次"},
+        {name:'老牛湾今日客流量：',guest:'2706 ',msg:"老牛湾今日人次：",count:"6729次"},
+        {name:'稻城亚丁今日客流量：',guest:'1139 ',msg:"稻城亚丁今日人次：",count:"4831次"},
+        {name:'香格里拉今日客流量：',guest:'8762 ',msg:"香格里拉今日人次：",count:"12138次"},
+        {name:'虎跳峡今日客流量：',guest:'16211 ',msg:"虎跳峡今日人次：",count:"2064次"},
+        {name:'熊猫基地今日客流量：',guest:'3790 ',msg:"熊猫基地今日人次：",count:"7103次"},
+        {name:'阆中古城今日客流量：',guest:'4900 ',msg:"阆中古城今日人次：",count:"8087次"},
+        {name:'乐山大佛今日客流量：',guest:'10354 ',msg:"乐山大佛今日人次：",count:"10672次"},
+        {name:'乌龙峡今日客流量：',guest:'267 ',msg:"乌龙峡今日人次：",count:"4530次"},
+      ]
     };
   },
   methods: {
-  backToLogin() {
+    backToLogin() {
       var api = "/sys/logout";
       var _this = this;
       var token = localStorage.getItem("token");
@@ -39,10 +66,9 @@ export default {
           console.log(response,"退出获取到的东西·····");
           
           if(response.data.resultStatus.resultCode === "0000"){
-              
               this.$router.replace('/Empty')          
               // console.log("退出登录");
-          }
+           }
         });
     }
   },
@@ -114,6 +140,22 @@ export default {
       &.active {
         color: #ff6600;
       }
+    }
+  }
+  .el-carousel__container {
+    height: 30px;
+    color: #f31f31;
+  }
+  .carousel {
+    width: 65%;
+    height: 50px;
+    margin-top: 5px;
+    position: absolute;
+    top: 0px;
+    left: 300px;
+    .el-carousel__item.is-active{
+      text-align: center;
+      line-height: 50px;
     }
   }
 }
