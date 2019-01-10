@@ -59,18 +59,20 @@ export default {
       this.$axios
         .get(path + api, {
           headers: {
-            Authorization: "Bearer" + token
+            Authorization: "Bearer " + token
           }
         })
         .then(response => {
-          console.log(response, "退出获取到的东西·····");
-
-          if (response.data.resultStatus.resultCode === "0000") {
-            console.log("退出登录");
-          }
+          console.log(response,"退出获取到的东西·····");
+          
+          if(response.data.resultStatus.resultCode === "0000"){
+              this.$router.replace('/Empty')          
+              // console.log("退出登录");
+           }
         });
     }
   },
+
   mounted() {
     var token = localStorage.getItem("token");
     //alert(token)

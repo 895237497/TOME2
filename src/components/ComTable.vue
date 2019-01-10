@@ -27,7 +27,11 @@
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
       <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
+<<<<<<< HEAD
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
+=======
+      <el-button round @click="importDatas" size="small" v-if="showImport">导入</el-button>
+>>>>>>> abf63a35de49615db906009d85cc9f98fa46bfa0
       <el-button round @click="exportDatas" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
 
@@ -307,15 +311,18 @@ export default {
       this.$emit("addData2");
     },
     //导入数据
-    importData() {
-      
-      alert("导入1");
+    importDatas() {
+      this.$emit("imports",this.centerDialogVisible)
     },
     //导出数据
     exportDatas() {
       console.log(this.sign)
-      let url = "http://39.98.168.124:8080/device/terminal/exportTerminal"
-      exportData(url)
+      if(this.sign === "rfid"){
+        var url = "http://192.168.0.157:8080/device/rfid/exportrfid"
+      }else if(this.sign === "rfidPosition"){
+        var url = "http://192.168.0.157:8080/device/rfid/exportposition"
+      }
+       exportData(url)
     },
     // 分配设备
     taskData(){
@@ -328,7 +335,7 @@ export default {
     //导入设备
     imports(){
       this.$emit("imports",this.centerDialogVisible)
-      
+
     },
     // 导出设备
     exportReceipt(){
@@ -541,7 +548,10 @@ export default {
           let ret = response;
           console.log(ret,"这是我要的数据----");
           if (ret.status == "200") {
-            vm.tableData = ret.data.value.list;
+            vm.tableData = ret.data.value.list.map(item => {
+              item.status = item.status===1?"有效" : "无效"
+              return item
+            })
             console.log(vm.tableData);
             vm.total = ret.data.value.total;
             vm.loading = false;
@@ -554,7 +564,7 @@ export default {
         })
         .catch(err => {
           setTimeout(() => {
-            vm.alertInfo("请求失败!" + error);
+            vm.alertInfo("请求失败!" + err);
           }, 150);
           
         });

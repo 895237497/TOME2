@@ -38,7 +38,7 @@ import Seat from '@/components/Home/datacount/Seat'
 import Help from '@/components/Home/datacount/Help'
 import Travel from '@/components/Home/datacount/Travel'
 
-
+import Empty from '@/components/Empty'
 
 
 let routes = [
@@ -47,6 +47,11 @@ let routes = [
         component: Login,
         // name: '登录',
         iconCls: 'el-icon-document',
+        
+    },
+    {
+        path: '/Empty',
+        component: Empty   
     },
     {
         path: '/index',
@@ -91,6 +96,7 @@ let routes = [
             {path:"/Travel",component:Travel,name:"行程信息"},
         ]
     },
+    
     // {
     //     path:'/spotindex',
     //     component:SpotIndex,
