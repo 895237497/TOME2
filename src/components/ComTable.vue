@@ -26,10 +26,9 @@
 
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
-      <el-button round @click="addData" size="small" v-if="showAdd">新增</el-button>
       <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
-      <el-button round @click="exportDatas" size="small" v-if="showExport">导出1</el-button>
+      <el-button round @click="exportDatas" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
 
       <el-button round  @click="addData2" size="small" v-if="showAddDevice">添加设备</el-button>
@@ -519,7 +518,6 @@ export default {
     },
     //拉取表格数据
     getTableData(sform) {
-      console.log(sform)
       var vm = this;
       this.loading = true;
 
@@ -573,7 +571,7 @@ export default {
       });
     },
     onSearch(sform) {
-      console.log(sform)
+      // console.log(sform)
       //this.getTableData(sform);
       //将searchForm传递给父组件
       this.$emit("search", sform);

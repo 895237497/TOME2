@@ -113,6 +113,7 @@
 </template>
 <script>
 import "../../assets/font/iconfont.css";
+import { path } from "../../api/api.js";
 export default {
   name: "Menu",
   data() {
@@ -124,8 +125,9 @@ export default {
   },
   mounted(){
     var token = localStorage.getItem("token");
+    var api ='/manager/me'
     this.$axios
-      .get("http://39.98.168.124:8080/manager/me", {
+      .get(path+ api, {
         headers: {
           Authorization: "Bearer" + token
         }

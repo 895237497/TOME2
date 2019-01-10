@@ -48,6 +48,9 @@ import { MP } from "./map.js";
 import BMap from "BMap";
 import { path } from "../../../api/api.js";
 import axios from "axios";
+
+
+
 var eCharts = require("echarts");
 
 export default {
@@ -191,6 +194,7 @@ export default {
           });
       });
 
+      //SOS求救
       map.addEventListener("tilesloaded", function() {
         var api = "/scenery/webdata/sos/query";
         var myIcon2 = new BMap.Icon(
@@ -264,7 +268,7 @@ export default {
                   " <br/>" +
                   "时间：" +
                   timestampToTime(res[i].createTime) +
-                  " <br/>"+
+                  " <br/>" +
                   "<input type='button' value=' 确认收到 ' style='font-size:16px;margin-left:210px;padding:0,10px; background: #ff6600;color:#fff;border-radius:14px;outline:none;cursor: pointer;'/>",
                 opts
               ); // 创建信息窗口对象
@@ -292,7 +296,6 @@ export default {
           });
       });
     },
-    
 
     // 统计图表
     lineCharts() {
@@ -390,11 +393,6 @@ export default {
 
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
-      // console.log("data", data);
-      // console.log("------------");
-      // console.log(this.personCount);
-      // console.log("------------");
-      //  this.personCount = JSON.parse(JSON.stringify(data))
       this.personCount = data;
     },
 
@@ -415,13 +413,13 @@ export default {
           // console.log(response, "查询设备总数及在线数量事件-----");
           return (_this.sum = response.data.value);
         });
-    }
+    },
+
   },
 
   mounted() {
     //调用上面的函数
     this.map();
-    // this.getIcon()
     this.finddevicecount();
     this.lineCharts();
   }
@@ -453,7 +451,7 @@ export default {
       flex: 1;
       text-align: center;
       z-index: 9999999999;
-       
+
       span {
         display: inline-block;
         width: 100%;
@@ -499,7 +497,6 @@ export default {
         text-align: center;
         line-height: 60px;
         color: #8c8c8c;
-        
       }
     }
     #main2 {

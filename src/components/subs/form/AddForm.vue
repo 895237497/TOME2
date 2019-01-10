@@ -85,7 +85,7 @@
             },
             addSubmit() {
                 //将addForm传递给父组件,在父组件调用ajax保存数据
-                this.$emit('add', this.addForm)
+                this.$emit('addForm', this.addForm)
             },
             cleanSubs() {
                 for (var i = 0; i < this.additems.length; i++) {
