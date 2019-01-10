@@ -23,7 +23,7 @@
     </div>
     <!-- 图标 -->
     <div class="os">
-      <ul>
+      <ul id="icon">
         <li>
           <img src="../../../assets/images/relitu.png">
         </li>
@@ -48,7 +48,6 @@ import { MP } from "./map.js";
 import BMap from "BMap";
 import { path } from "../../../api/api.js";
 import axios from "axios";
-import common from "../../common/date.js";
 var eCharts = require("echarts");
 
 export default {
@@ -65,7 +64,7 @@ export default {
       map.enableScrollWheelZoom();
       map.addControl(new BMap.NavigationControl()); //添加默认缩放平移控件
       map.centerAndZoom(point, 6);
-       
+
       map.addEventListener("tilesloaded", function() {
         var api = "/device/terminal/selectTerminalCoordinate";
         var token = localStorage.getItem("token");
@@ -85,74 +84,113 @@ export default {
             }
           })
           .then(response => {
-            // console.log(response);
             let resdata = response.data.value;
             // console.log(resdata);
-
             for (var i = 0; i < resdata.length; i++) {
+              let id = resdata[i].id;
               // 判断是否在线
               if (resdata[i].isOnline == 1) {
                 var p1 = new BMap.Point(resdata[i].lon, resdata[i].lat);
-                var id = resdata[i].id
-                // console.log(id);
                 var marker2 = new BMap.Marker(p1, { icon: myIcon }); // 创建标注
                 map.addOverlay(marker2); // 将标注添加到地图中
-                var opts = {
-                  width: 200, // 信息窗口宽度
-                  height: 150, // 信息窗口高度
-                  // title: "海底捞王府井店", // 信息窗口标题
-                  enableMessage: true //设置允许信息窗发送短息
-                };
-                var infoWindow = new BMap.InfoWindow(
-                  "地址：北京市东城区王府井大街88号乐天银泰百货八层",
-                  opts
-                ); // 创建信息窗口对象
-                
-                marker2.addEventListener("click", function() {  
-                  var api ='/device/terminal/selectTerminalInfo'
-                  var _this = this                  
-                  var token = localStorage.getItem('token')
-                  axios.get(path + api,{
-                    id:_this.id
-                  },{
-                    headers:{
-                      Authorization:"Bearer" + token
-                    }
-                  }).then(response=>{
-                    console.log(response,"定位信息框");
-                    
-                  })
-                  // console.log(p1,"信息窗口位置");
-                  map.openInfoWindow(infoWindow, p1); //开启信息窗口
+                marker2.addEventListener("click", function() {
+                  let api = "/device/terminal/selectTerminalInfo";
+                  let _this = this;
+                  this.id = id;
+                  // this.point = p1;
+                  // console.log(this.point, "我要经纬度");
+
+                  let token = localStorage.getItem("token");
+                  axios
+                    .get(path + api + "?id=" + this.id, {
+                      headers: {
+                        Authorization: "Bearer" + token
+                      }
+                    })
+                    .then(response => {
+                      console.log(response, "信息框数据");
+                      var opts = {
+                        width: 240, // 信息窗口宽度
+                        height: 100, // 信息窗口高度
+                        // title: "海底捞王府井店", // 信息窗口标题
+                        enableMessage: true //设置允许信息窗发送短息
+                      };
+                      var infoWindow = new BMap.InfoWindow(
+                        "机器码：" +
+                          response.data.value.codeMachine +
+                          "<br>" +
+                          "定位地址：" +
+                          response.data.value.positionAddress +
+                          "<br>" +
+                          "电量：" +
+                          response.data.value.battery +
+                          "<br>" +
+                          "电话：" +
+                          response.data.value.telephone +
+                          "<br>" +
+                          "定位时间：" +
+                          response.data.value.positionTime +
+                          "<br>" +
+                          "最后在线时间：" +
+                          response.data.value.onLineTime +
+                          "<br>",
+                        opts
+                      ); // 创建信息窗口对象
+                      map.openInfoWindow(infoWindow, this.point); //开启信息窗口
+                    });
                 });
               } else {
                 var p1 = new BMap.Point(resdata[i].lon, resdata[i].lat);
-                 var id = resdata[i].id
-                // console.log(id);
-                // console.log("离线的p1",p1);
                 var marker2 = new BMap.Marker(p1, { icon: myIcon1 }); // 创建标注
-                // marker2.addEventListener("click", attribute);
                 map.addOverlay(marker2); // 将标注添加到地图中
-                var opts = {
-                  width: 200, // 信息窗口宽度
-                  height: 150, // 信息窗口高度
-                  // title: "海底捞王府井店", // 信息窗口标题
-                  enableMessage: true //设置允许信息窗发送短息
-                };
-                var infoWindow = new BMap.InfoWindow(
-                  "地址：北京市东城区王府井大街88号乐天银泰百货八层",
-                  opts
-                ); // 创建信息窗口对象
                 marker2.addEventListener("click", function() {
-                  console.log(p1, "信息窗口位置");
-                  map.openInfoWindow(infoWindow, p1); //开启信息窗口
+                  let api = "/device/terminal/selectTerminalInfo";
+                  let _this = this;
+                  this.id = id;
+                  let token = localStorage.getItem("token");
+                  axios
+                    .get(path + api + "?id=" + this.id, {
+                      headers: {
+                        Authorization: "Bearer" + token
+                      }
+                    })
+                    .then(response => {
+                      console.log(response, "信息框数据");
+                      var opts = {
+                        width: 240, // 信息窗口宽度
+                        height: 100, // 信息窗口高度
+                        // title: "海底捞王府井店", // 信息窗口标题
+                        enableMessage: true //设置允许信息窗发送短息
+                      };
+                      var infoWindow = new BMap.InfoWindow(
+                        "机器码：" +
+                          response.data.value.codeMachine +
+                          "<br>" +
+                          "定位地址：" +
+                          response.data.value.positionAddress +
+                          "<br>" +
+                          "电量：" +
+                          response.data.value.battery +
+                          "<br>" +
+                          "电话：" +
+                          response.data.value.telephone +
+                          "<br>" +
+                          "定位时间：" +
+                          response.data.value.positionTime +
+                          "<br>" +
+                          "最后在线时间：" +
+                          response.data.value.onLineTime +
+                          "<br>",
+                        opts
+                      ); // 创建信息窗口对象
+                      map.openInfoWindow(infoWindow, this.point); //开启信息窗口
+                    });
                 });
               }
             }
-
-            
           });
       });
+
       map.addEventListener("tilesloaded", function() {
         var api = "/scenery/webdata/sos/query";
         var myIcon2 = new BMap.Icon(
@@ -172,7 +210,7 @@ export default {
           )
           .then(response => {
             var res = response.data.value.list;
-            console.log("res", res);
+            // console.log("res", res);
 
             for (var i = 0; i < res.length; i++) {
               // 获取经纬度
@@ -225,44 +263,36 @@ export default {
                   res[i].sceneryName +
                   " <br/>" +
                   "时间：" +
-                  res[i].createTime +
-                  " <br/>",
-                   // 日期转换
-              function timeStamp(createTime){
-                  var date = new date(createTime *1000);
-                  var  Y = date.getFullYear()+'/';
-                  var M =(date.getMonth()+1 <10? '0' +(date.getMonth()+1): date.getMonth()+1)+'/';
-                  var D = date.getDate()+'/';
-                  var h = date.getHours()+ '/';
-                  var m = date.getMinutes()+'/';
-                  var s = date.getSeconds();
-                  return Y+M+D+h+m+s
-              },
-              // timeStamp(createTime);
-              // console.log(timeStamp(createTime));
+                  timestampToTime(res[i].createTime) +
+                  " <br/>"+
+                  "<input type='button' value=' 确认收到 ' style='font-size:16px;margin-left:210px;padding:0,10px; background: #ff6600;color:#fff;border-radius:14px;outline:none;cursor: pointer;'/>",
                 opts
               ); // 创建信息窗口对象
               // 日期转换
-              // function timeStamp(createTime){
-              //     var date = new date(createTime *1000);
-              //     var  Y = date.getFullYear()+'/';
-              //     var M =(date.getMonth()+1 <10? '0' +(date.getMonth()+1): date.getMonth()+1)+'/';
-              //     var D = date.getDate()+'/';
-              //     var h = date.getHours()+ '/';
-              //     var m = date.getMinutes()+'/';
-              //     var s = date.getSeconds();
-              //     return Y+M+D+h+m+s
-              // }
-              // timeStamp(createTime)
-              // console.log(timeStamp(createTime));
-              
+              function timestampToTime(createTime) {
+                var date = new Date(res[i].createTime); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + "/";
+                var M =
+                  (date.getMonth() + 1 < 10
+                    ? "0" + (date.getMonth() + 1)
+                    : date.getMonth() + 1) + "/";
+                var D = date.getDate() + "/ ";
+                var h = date.getHours() + ":";
+                var m = date.getMinutes() + ":";
+                var s = date.getSeconds();
+                return Y + M + D + h + m + s;
+              }
+              timestampToTime(res[i].createTime);
+              // console.log(timestampToTime(res[i].createTime));
+
               marker2.addEventListener("click", function() {
-                map.openInfoWindow(infoWindow, pt); //开启信息窗口
+                map.openInfoWindow(infoWindow, this.point); //开启信息窗口
               });
             }
           });
       });
     },
+    
 
     // 统计图表
     lineCharts() {
@@ -373,7 +403,7 @@ export default {
       var api = "/device/terminal/selectTerminalCount";
       var _this = this;
       var token = localStorage.getItem("token");
-      console.log(token);
+      // console.log(token);
 
       this.$axios
         .get(path + api, {
@@ -382,7 +412,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response, "查询设备总数及在线数量事件-----");
+          // console.log(response, "查询设备总数及在线数量事件-----");
           return (_this.sum = response.data.value);
         });
     }
@@ -391,7 +421,7 @@ export default {
   mounted() {
     //调用上面的函数
     this.map();
-
+    // this.getIcon()
     this.finddevicecount();
     this.lineCharts();
   }
@@ -423,7 +453,7 @@ export default {
       flex: 1;
       text-align: center;
       z-index: 9999999999;
-
+       
       span {
         display: inline-block;
         width: 100%;
@@ -469,6 +499,7 @@ export default {
         text-align: center;
         line-height: 60px;
         color: #8c8c8c;
+        
       }
     }
     #main2 {
