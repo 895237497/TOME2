@@ -52,7 +52,7 @@
 
         <el-form-item style="margin: 30px auto;width: 330px;" label="经纬度" prop="lonLat">
           <el-input v-model="addForm.lonLat" autocomplete="off" placeholder="获取当前经纬度"></el-input>
-          <span class="gain">获取</span>
+          <!-- <span class="gain">获取</span> -->
         </el-form-item>
         <div class="map">
           <bmapcomponent @lngLat="getlngLat"/>
@@ -95,7 +95,7 @@
 
         <el-form-item style="margin: 30px auto;width: 330px;" label="经纬度" prop="lonLat">
           <el-input v-model="editForm.lonLat" autocomplete="off" placeholder="获取当前经纬度"></el-input>
-          <span class="gain">获取</span>
+          <!-- <span class="gain">获取</span> -->
         </el-form-item>
         <div class="map">
           <bmapcomponent @lngLat="getlngLat"/>
@@ -508,7 +508,7 @@ export default {
       this.$refs["tumitable"].getTableData(sform);
     }
 
-    // 百度地图
+    
   },
 
   activated() {},

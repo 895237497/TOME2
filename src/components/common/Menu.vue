@@ -113,6 +113,7 @@
 </template>
 <script>
 import "../../assets/font/iconfont.css";
+import { path } from "../../api/api.js";
 export default {
   name: "Menu",
   data() {
@@ -124,8 +125,9 @@ export default {
   },
   mounted(){
     var token = localStorage.getItem("token");
+    var api ='/manager/me'
     this.$axios
-      .get("http://192.168.0.102:8080/manager/me", {
+      .get(path+ api, {
         headers: {
           Authorization: "Bearer" + token
         }
@@ -219,7 +221,6 @@ export default {
         left: 34px;
       }
     }
-
     .el-radio-button__orig-radio:checked + .el-radio-button__inner {
       box-shadow: -1px 0 0 0 #ccc;
     }
