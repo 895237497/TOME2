@@ -127,11 +127,7 @@ export default {
     var token = localStorage.getItem("token");
     var api ='/manager/me'
     this.$axios
-<<<<<<< HEAD
       .get(path+ api, {
-=======
-      .get("http://192.168.0.102:8080/manager/me", {
->>>>>>> abf63a35de49615db906009d85cc9f98fa46bfa0
         headers: {
           Authorization: "Bearer" + token
         }

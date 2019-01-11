@@ -27,11 +27,8 @@
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
       <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
-<<<<<<< HEAD
       <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
-=======
       <el-button round @click="importDatas" size="small" v-if="showImport">导入</el-button>
->>>>>>> abf63a35de49615db906009d85cc9f98fa46bfa0
       <el-button round @click="exportDatas" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
 
