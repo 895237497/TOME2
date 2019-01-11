@@ -57,9 +57,9 @@ export default {
                 'Authorization': "Bearer " + token
             }
         }).then(function (response) {
-			console.log('====================================================================')
-			console.log(response.data,"添加获取到的数据-----")
-			fn();
+            console.log(response.data,"添加获取到的数据-----")
+            fn();
+            
 		
         }).catch(function (error) {
         	console.log("请求出错")

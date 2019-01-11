@@ -27,7 +27,6 @@
     <!--表格按钮-->
     <el-row style="margin-left: 89px;">
       <el-button round @click="addData2" size="small" v-if="showAdd2">新增</el-button>
-      <el-button round @click="importData" size="small" v-if="showImport">导入</el-button>
       <el-button round @click="importDatas" size="small" v-if="showImport">导入</el-button>
       <el-button round @click="exportDatas" size="small" v-if="showExport">导出</el-button>
       <el-button round size="small" v-if="showDel" @click="showDelVisible">删除</el-button>
@@ -545,10 +544,7 @@ export default {
           let ret = response;
           console.log(ret,"这是我要的数据----");
           if (ret.status == "200") {
-            vm.tableData = ret.data.value.list.map(item => {
-              item.status = item.status===1?"有效" : "无效"
-              return item
-            })
+            vm.tableData = ret.data.value.list
             console.log(vm.tableData);
             vm.total = ret.data.value.total;
             vm.loading = false;

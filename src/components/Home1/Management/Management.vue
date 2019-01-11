@@ -229,7 +229,7 @@ export default {
       showAllDevice: true,
       showImpDevice: true,
       showExpDevice: true,
-      fridtype: 1,
+      // fridtype: 1,
       showTools: {
         tools: true,
         codeMachine: true,
@@ -600,7 +600,7 @@ export default {
         });
     },
     onSearch(sform) {
-      sform.type = this.fridtype;
+      // sform.type = this.fridtype;
 
       this.getTableData(sform);
     },
@@ -616,9 +616,9 @@ export default {
         sceneryIds.push(sform.sceneryIdId);
       }
 
-      //获取表格数据
-      sform.type = this.fridtype;
-      sform.sceneryIds = sceneryIds;
+      // //获取表格数据
+      // sform.type = this.fridtype;
+      // sform.sceneryIds = sceneryIds;
 
       this.$refs["tumitable"].getTableData(sform);
     }

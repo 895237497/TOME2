@@ -449,6 +449,7 @@ export default {
     },
     addData2() {
       this.addVisible = true;
+      this.clearData()
     },
     showSetting: function(name) {
       alert("hello:" + name);
