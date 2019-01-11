@@ -117,7 +117,7 @@ export default {
                     type: "success"
                   });
 
-                  this.$router.push({ path: "/Empty" });
+                  this.$router.push({ path: "/index" });
                 } else {
                   //  登录失败的错误提示
                   this.$message({
