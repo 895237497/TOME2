@@ -66,7 +66,8 @@ export default {
           console.log(response,"退出获取到的东西·····");
           
           if(response.data.resultStatus.resultCode === "0000"){
-              this.$router.replace('/Empty')          
+              window.location.href="/"
+              // this.$router.replace('/Empty')          
               // console.log("退出登录");
            }
         });
