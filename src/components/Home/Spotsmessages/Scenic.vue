@@ -197,7 +197,7 @@ export default {
             {
               label: "名称",
               prop: "name",
-              width: "380",
+              width: "330",
               type: "number",
               editable: true,
               searchable: true,
@@ -213,7 +213,7 @@ export default {
             {
               label: "位置",
               prop: "address",
-              width: "400",
+              width: "360",
               type: "selection",
               selectlist: [{}, {}],
               editable: true,
@@ -230,7 +230,7 @@ export default {
             {
               label: "经纬度",
               prop: "lonLat",
-              width: "390",
+              width: "350",
               type: "number",
               editable: true,
               searchable: true,

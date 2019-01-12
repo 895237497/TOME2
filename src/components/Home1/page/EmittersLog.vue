@@ -43,7 +43,7 @@ export default {
     	showTools: {
     		tools:true,
       	no:true,
-      	scenery:true,
+      	spot:true,
       	date:true,
       	codeMachine:true
       },

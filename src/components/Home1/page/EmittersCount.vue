@@ -46,13 +46,13 @@
 							  </el-form-item>-->
 							  
 							  <el-form-item label="景区服务商"  style="margin: 30px auto;width: 330px;" prop="sceneryId">
-							    <el-select v-model="addForm.sceneryId" placeholder="请选择景区">
+							    <el-select v-model="addForm.sceneryId" filterable placeholder="请选择景区">
 							      <el-option v-for="item in scenerylist" :label="item.name" :value="item.id"></el-option>
 							    </el-select>
 							  </el-form-item>
 
 							  <el-form-item ref="select1" label="景点名称" style="margin: 30px auto;width: 330px;" prop="scenerySpotId">
-							    <el-select  v-model="addForm.scenerySpotId" placeholder="请选择活景点">
+							    <el-select  v-model="addForm.scenerySpotId" filterable placeholder="请选择活景点">
 							    	
 							     <el-option v-for="item in sceneryspotlist" :label="item.name" :value="item.id"></el-option>
 							    </el-select>
@@ -98,13 +98,13 @@
 							  </el-form-item>-->
 							  
 							  <el-form-item label="景区服务商"  style="margin: 30px auto;width: 330px;" prop="sceneryId">
-							    <el-select v-model="editForm.sceneryId" placeholder="请选择景区">
+							    <el-select v-model="editForm.sceneryId" filterable placeholder="请选择景区">
 							      <el-option v-for="item in scenerylist" :label="item.name" :value="item.id"></el-option>
 							    </el-select>
 							  </el-form-item>
 
 							  <el-form-item ref="select1" label="景点名称" style="margin: 30px auto;width: 330px;" prop="scenerySpotId">
-							    <el-select  v-model="editForm.scenerySpotId" placeholder="请选择活景点">
+							    <el-select  v-model="editForm.scenerySpotId" filterable placeholder="请选择活景点">
 							    	
 							     <el-option v-for="item in sceneryspoteditlist" :label="item.name" :value="item.id"></el-option>
 							    </el-select>
@@ -177,7 +177,7 @@ export default {
       },
     	contenttitl:{
     		name:'发射源管理',
-    		description:'发射源',
+    		description:'发射源统计',
     		tabledesctiption:'共有RFID发射源',
     		unit:'个'
     	},

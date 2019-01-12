@@ -155,25 +155,7 @@ export default {
       console.log(key, keyPath);
     }
   }
-  // mounted() {
-  //   var token = localStorage.getItem("token");
-  //   //alert(token)
-  //   var _this = this;
-  //   //var access_token=this.access_token
-  //   var access_token = "58a38873-7471-4104-baca-b07884447136 ";
-  //   axios
-  //     .get("http://192.168.0.39:8080/manager/me", {
-  //       headers: {
-  //         Authorization: "Bearer" + token
-  //       }
-  //     })
-  //     .then(response => {
-  //       console.log(response);
-  //       if (response.data.resultStatus.resultCode === "0000") {
-  //         return (this.lists = response.data.value);
-  //       }
-  //     });
-  // }
+  
 };
 </script>
 <style lang="less">

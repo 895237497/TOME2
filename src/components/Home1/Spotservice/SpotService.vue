@@ -185,7 +185,7 @@ export default {
         // codeMachine:true,
         // device:true,
         // version:true,
-        scenery: true
+        spot: true
         // date:true,
       },
       showRFID: true,

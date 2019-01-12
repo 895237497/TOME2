@@ -545,7 +545,7 @@ export default {
           console.log(ret,"这是我要的数据----");
           if (ret.status == "200") {
             vm.tableData = ret.data.value.list
-            console.log(vm.tableData);
+            console.log("查询单个景点");
             vm.total = ret.data.value.total;
             vm.loading = false;
             vm.$message({
