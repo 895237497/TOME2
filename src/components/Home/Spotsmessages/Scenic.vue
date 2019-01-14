@@ -516,7 +516,7 @@ export default {
 el-dialog .el-input__inner {
   width: 330px;
 }
-map {
+.map {
   width: 480px;
   height: 200px;
   border: 1px solid #ccc;

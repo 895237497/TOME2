@@ -141,7 +141,7 @@
         style="display: inline-block;"
         size="small"
         placeholder="请输入电话"
-        v-model="sform.mobile"
+        v-model="sform.telephone"
         clearable
       ></el-input>
     </div>

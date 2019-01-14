@@ -18,7 +18,7 @@
     export default {
         data(){
             return {
-                token:{Authorization:'Bearer' + localStorage.getItem('token')}
+                token:{Authorization:'Bearer ' + localStorage.getItem('token')}
             }
         },
         props: ["centerDialogVisible","updateUrl","downloadUrl"],

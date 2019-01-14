@@ -20,7 +20,8 @@
 		       			v-on:search="onSearch"
 		       			v-on:addData2="addData2"
                 v-on:editData="editData" 
-	       							ref="tumitable"/>
+                @imports="imports"
+	       				ref="tumitable"/>
 
     <!--设备添加-->
     <el-dialog title :visible.sync="addVisible" style width="520px" :close-on-click-modal="false">
@@ -116,8 +117,8 @@
         <el-button type="primary" style="background: #FA841A;" size="small" @click="update">保存</el-button>
       </span>
     </el-dialog>
-
-    
+    <!-- 导入导游信息 -->
+    <importModel :centerDialogVisible="centerDialogVisible" @hideCenterDialogVisible="hideCenterDialogVisible" :updateUrl="updateUrl" :downloadUrl="downloadUrl"/>
   </div>
 </template>
 
@@ -125,9 +126,11 @@
 import ComTable from "../../ComTable";
 import common from "../../common/common.js";
 import { path } from "../../../api/api";
+import importModel from "../../importModel"
 export default {
   components: {
-    ComTable
+    ComTable,
+    importModel
   },
   data() {
     //自定义校验，播报半径校验，正整数
@@ -146,6 +149,9 @@ export default {
       }
     };
     return {
+      centerDialogVisible:false,
+      updateUrl: path + "/tourists/guide/importGuide",
+      downloadUrl: path + "/tourists/guide/getGuideTemplate",
       showresetButton:true,
        powerOff:true,
       contenttitl: {
@@ -338,6 +344,14 @@ export default {
     };
   },
   methods: {
+    //控制导入模态框的状态
+    hideCenterDialogVisible(){
+      this.centerDialogVisible = false
+    },
+    //导入
+    imports(centerDialogVisible){
+      this.centerDialogVisible = centerDialogVisible
+    },
     //修改
     update() {
       var _this = this;

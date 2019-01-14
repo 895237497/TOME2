@@ -553,9 +553,27 @@ export default {
               if(item.radius){
                 item.radius = item.radius + "km"
               }
+              if(item.isOnline){
+                item.isOnline = item.isOnline === 1 ? "在线" : "离线"
+              }
+              if(item.sex){
+                item.sex = item.sex === 1 ? "男" : "女"
+              }
+              if(item.state){
+                item.state = item.state === 1 ? "启用" : "停用"
+              }
+              if(item.type){
+                if(item.type === 1){
+                  item.type = "出境游"
+                }else if(item.type === 2){
+                  item.type = "短途游"
+                }else{
+                  item.type ="长途游"
+                }
+              }
               return item
             }) : arrData
-            console.log(arrData)
+            console.log(vm.tableData[0].isOnline === 0)
             console.log(vm.tableData);
             vm.total = ret.data.value.total;
             vm.loading = false;
