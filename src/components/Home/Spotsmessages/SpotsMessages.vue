@@ -47,12 +47,12 @@
         </el-form-item> -->
 
           <el-form-item label="所属线路" style="margin: 30px auto;width: 330px;" prop="touristRouteIds">
-          <!-- <el-select v-model="editForm.touristRouteIds" placeholder="请选择线路">
-            <el-option v-for="item in touristRouteIdslist" :label="item.name" :value="item.id"></el-option>
-          </el-select> -->
-          <el-checkbox-group v-model="addForm.touristRouteIds" size="small">
+          <el-select v-model="editForm.touristRouteIds" placeholder="请选择线路">
+            <el-option v-for="item in touristRouteIdslist" :label="item.name" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+          <!-- <el-checkbox-group v-model="addForm.touristRouteIds" size="small">
            <el-checkbox-button v-for="item in touristRouteIdslist" :label="item.id" :value="item.id" :key="item.id">{{item.name}}</el-checkbox-button>
-          </el-checkbox-group>
+          </el-checkbox-group> -->
         </el-form-item>
 
         <el-form-item label="状态" style="margin: 30px auto;width: 330px;" prop="status">

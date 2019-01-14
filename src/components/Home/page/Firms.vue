@@ -118,7 +118,7 @@ export default {
         tabledesctiption: "共有设备",
         unit: "个"
       },
-      queryapi: "/device/terminalUser/selectMember	",
+      queryapi: "/device/terminalUser/selectMember",
       delapi: "/device/terminalUser/deleteTerminalFromTouristTeamBath	",
       saveapi: "/device/terminalUser/allotTerminalToTouristTeam	",
       updateapi: "/device/terminalUser/updateTerminalToTouristTeam",
