@@ -283,7 +283,7 @@ export default {
         if(response.data.resultStatus.resultCode === "0000"){
           this.$message({
             message:"密码修改成功",
-            type:'success',
+            type:'success',  
             duration: 1200
           })
           
@@ -314,9 +314,9 @@ export default {
     exportDatas() {
       console.log(this.sign)
       if(this.sign === "rfid"){
-        var url = "http://192.168.0.157:8080/device/rfid/exportrfid"
+        var url =  path + "/device/rfid/exportrfid"
       }else if(this.sign === "rfidPosition"){
-        var url = "http://192.168.0.157:8080/device/rfid/exportposition"
+        var url = path + "/device/rfid/exportposition"
       }
        exportData(url)
     },
@@ -335,7 +335,7 @@ export default {
     },
     // 导出设备
     exportReceipt(){
-      let url = "http://39.98.168.124:8080/device/terminal/exportTerminal"
+      let url = path + "/device/terminal/exportTerminal"
       exportData(url)
       // return
       // this.$confirm('此操作将设备信息导出为excel表格, 是否继续?', '提示', {
@@ -542,9 +542,39 @@ export default {
         })
         .then(function(response) {
           let ret = response;
-          console.log(ret,"这是我要的数据----");
+          console.log(ret.data.value,"这是我要的数据----");
           if (ret.status == "200") {
-            vm.tableData = ret.data.value.list
+            let arrData = []
+            arrData.push(ret.data.value)
+            vm.tableData = ret.data.value.list ? ret.data.value.list.map(item => {
+              if(item.status){
+                item.status = item.status === 0 ? "无效" : "有效"
+              }
+              if(item.radius){
+                item.radius = item.radius + "km"
+              }
+              if(item.isOnline){
+                item.isOnline = item.isOnline === 1 ? "在线" : "离线"
+              }
+              if(item.sex){
+                item.sex = item.sex === 1 ? "男" : "女"
+              }
+              if(item.state){
+                item.state = item.state === 1 ? "启用" : "停用"
+              }
+              if(item.type){
+                if(item.type === 1){
+                  item.type = "出境游"
+                }else if(item.type === 2){
+                  item.type = "短途游"
+                }else{
+                  item.type ="长途游"
+                }
+              }
+              return item
+            }) : arrData
+            console.log(vm.tableData[0].isOnline === 0)
+            console.log(vm.tableData);
             console.log("查询单个景点");
             vm.total = ret.data.value.total;
             vm.loading = false;
@@ -556,8 +586,9 @@ export default {
           }
         })
         .catch(err => {
+          console.log("请求成功，为什么会走这里呢")
           setTimeout(() => {
-            vm.alertInfo("请求失败!" + err);
+            vm.alertInfo("请求失败!!!" + err);
           }, 150);
           
         });
