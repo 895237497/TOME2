@@ -425,7 +425,8 @@ export default {
           Authorization: "Bearer" + token
         }
       }).then(response=>{
-        return this.touristRouteIdslist = response.data.value
+        return this.touristRouteIdslist = response.data.value;
+         
       })
     },
     
@@ -449,6 +450,7 @@ export default {
     },
     addData2() {
       this.addVisible = true;
+      this.clearData()
     },
     // 分配设备
     taskData(multipleSelection) {

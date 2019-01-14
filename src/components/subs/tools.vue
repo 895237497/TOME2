@@ -31,7 +31,7 @@
         style="display: inline-block;"
         size="small"
         placeholder="请输入线路名称"
-        v-model="sform.line"
+        v-model="sform.name"
         clearable
       ></el-input>
     </div>
@@ -141,7 +141,7 @@
         style="display: inline-block;"
         size="small"
         placeholder="请输入电话"
-        v-model="sform.mobile"
+        v-model="sform.telephone"
         clearable
       ></el-input>
     </div>
