@@ -165,8 +165,8 @@ export default {
       };
     return {
 			centerDialogVisible:false,
-      updateUrl:"http://192.168.0.157:8080/device/rfid/importposition",
-      downloadUrl:"http://192.168.0.157:8080/device/rfid/exportposition",
+      updateUrl: path + "/device/rfid/importposition",
+      downloadUrl: path + "/device/rfid/exportposition",
 			showresetButton:true,
 			powerOff:true,
     	contenttitl:{
