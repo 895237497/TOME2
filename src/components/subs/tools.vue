@@ -31,7 +31,7 @@
         style="display: inline-block;"
         size="small"
         placeholder="请输入线路名称"
-        v-model="sform.line"
+        v-model="sform.name"
         clearable
       ></el-input>
     </div>
@@ -214,6 +214,18 @@
 
     <div style="display: inline;margin-right: 84px;" v-if="showTools.scenery">
       <span style="margin-right: 18px;">景区</span>
+      <el-select v-model="sform.sceneryId" size="small" filterable placeholder="请选择景区·····">
+        <el-option
+          v-for="item in scenerylistquery"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+    </div>
+
+    <div style="display: inline;margin-right: 84px;" v-if="showTools.spot">
+      <span style="margin-right: 18px;">景区</span>
       <el-select v-model="sform.id" size="small" filterable placeholder="请选择景区·····">
         <el-option
           v-for="item in scenerylistquery"
@@ -322,6 +334,7 @@ export default {
         touristTeamName: "",
         startTime: "",
         endTime: "",
+        sceneryId:""
       }
     };
   },

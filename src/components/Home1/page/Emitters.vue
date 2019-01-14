@@ -43,7 +43,7 @@ export default {
       },
     	contenttitl:{
     		name:'发射源管理',
-    		description:'发射源统计',
+    		description:'发射源',
     		tabledesctiption:'发射源统计记录',
     		unit:'条'
     	},
@@ -265,7 +265,8 @@ export default {
       
     },
   	addData2(){
-  		this.addVisible=true
+      this.addVisible=true;
+      // this.clearData()
   	},
   	showSetting:function(name){
   		alert('hello:'+name)

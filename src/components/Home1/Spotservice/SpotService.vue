@@ -185,7 +185,7 @@ export default {
         // codeMachine:true,
         // device:true,
         // version:true,
-        scenery: true
+        spot: true
         // date:true,
       },
       showRFID: true,
@@ -449,6 +449,7 @@ export default {
     },
     addData2() {
       this.addVisible = true;
+      this.clearData()
     },
     showSetting: function(name) {
       alert("hello:" + name);

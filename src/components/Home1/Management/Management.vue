@@ -55,7 +55,7 @@
 							    <el-input  v-model="addForm.isAllot" autocomplete="off"></el-input>
         </el-form-item>-->
         <el-form-item label="景区" style="margin: 30px auto;width: 330px;" prop="sceneryId">
-          <el-select v-model="addForm.sceneryId" placeholder="请选择景区">
+          <el-select v-model="addForm.sceneryId" filterable placeholder="请选择景区">
             <el-option v-for="item in scenerylist" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -97,7 +97,7 @@
 							    <el-input  v-model="addForm.isAllot" autocomplete="off"></el-input>
         </el-form-item>-->
         <el-form-item label="景区" style="margin: 30px auto;width: 330px;" prop="sceneryId">
-          <el-select v-model="editForm.sceneryId" placeholder="请选择景区">
+          <el-select v-model="editForm.sceneryId" filterable placeholder="请选择景区">
             <el-option v-for="item in scenerylist" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -129,7 +129,7 @@
           style="margin: 30px auto;width: 330px;margin-top:30px"
           prop="sceneryId"
         >
-          <el-select v-model="taskForm.sceneryId" placeholder="太行山">
+          <el-select v-model="taskForm.sceneryId" filterable placeholder="太行山">
             <el-option v-for="item in scenerylist" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -229,7 +229,7 @@ export default {
       showAllDevice: true,
       showImpDevice: true,
       showExpDevice: true,
-      fridtype: 1,
+      // fridtype: 1,
       showTools: {
         tools: true,
         codeMachine: true,
@@ -585,6 +585,8 @@ export default {
           }
         )
         .then(function(response) {
+          console.log("查询单个景点");
+          
           let data = response.data.value;
 
           let scenerylist = data.slice();
@@ -600,7 +602,7 @@ export default {
         });
     },
     onSearch(sform) {
-      sform.type = this.fridtype;
+      // sform.type = this.fridtype;
 
       this.getTableData(sform);
     },
@@ -616,9 +618,9 @@ export default {
         sceneryIds.push(sform.sceneryIdId);
       }
 
-      //获取表格数据
-      sform.type = this.fridtype;
-      sform.sceneryIds = sceneryIds;
+      // //获取表格数据
+      // sform.type = this.fridtype;
+      // sform.sceneryIds = sceneryIds;
 
       this.$refs["tumitable"].getTableData(sform);
     }

@@ -284,7 +284,7 @@ export default {
             {
               label: "线路名称",
               prop: "name",
-              width: "420",
+              width: "400",
               type: "number",
               editable: true,
               searchable: true,
@@ -300,7 +300,7 @@ export default {
             {
               label: "目的地",
               prop: "destination",
-              width: "420",
+              width: "400",
               type: "selection",
               selectlist: [{}, {}],
               editable: true,
@@ -465,6 +465,7 @@ export default {
     },
     addData2() {
       this.addVisible = true;
+      this.clearData()
     },
 
     //  导出设备
@@ -529,15 +530,7 @@ export default {
   },
   activated() {},
   
-  computed: {
-
-    getType() {
-      return function(type) {
-        return type == 1 ? "出境游" : "短途游" ;
-      }
-    }
-    
-  },
+  
 
   mounted() {
     //查询景区服务商并并获取表格数据
